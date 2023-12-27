@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <button type="submit" class="btn btn-violet">Přihlásit</button>
+                                    <button type="submit" class="btn btn-primary">Přihlásit</button>
                                 </div>
                             </form>
                             <div class="dropdown-divider"></div>
