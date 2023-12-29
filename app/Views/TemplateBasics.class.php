@@ -18,14 +18,14 @@ class TemplateBasics
             <title><?php echo $pageTitle ?></title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-            <link href="../../../web-semestralka/app/resources/styles.css" rel="stylesheet">
+            <link href="../../../web-semestralka/app/Resources/styles.css" rel="stylesheet">
         </head>
         <body class="d-flex flex-column min-vh-100">
             <header>
                 <nav class="navbar navbar-expand-lg bg-dark border-bottom" data-bs-theme="dark">
                     <div class="container-fluid">
                         <a class="navbar-brand" href="#">
-                            <img src="../../../web-semestralka/app/resources/logos/navbar-logo.png" alt="Logo hlavní stránky" height="64" width="64">
+                            <img src="../../../web-semestralka/app/Resources/logos/navbar-logo.png" alt="Logo hlavní stránky" height="64" width="64">
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -48,7 +48,7 @@ class TemplateBasics
                                         Přihlásit se
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <form class="px-4">
+                                        <form class="px-4" method="post">
                                             <div class="mb-3">
                                                 <label for="username" class="form-label">Uživatelské jméno:</label>
                                                 <div class="input-group mb-3">
@@ -57,7 +57,7 @@ class TemplateBasics
                                                           <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"></path>
                                                         </svg>
                                                     </span>
-                                                    <input type="text" class="form-control" placeholder="Uživatelské jméno">
+                                                    <input type="text" name="username" class="form-control" placeholder="Uživatelské jméno">
                                                 </div>
                                             </div>
                                             <div class="mb-3">
@@ -69,11 +69,11 @@ class TemplateBasics
                                                           <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
                                                         </svg>
                                                     </span>
-                                                    <input type="password" class="form-control" placeholder="Heslo">
+                                                    <input type="password" name="password" class="form-control" placeholder="Heslo">
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <button type="submit" class="btn btn-primary">Přihlásit</button>
+                                                <button type="submit" name="login-btn" value="login" class="btn btn-primary">Přihlásit</button>
                                             </div>
                                         </form>
                                         <div class="dropdown-divider"></div>

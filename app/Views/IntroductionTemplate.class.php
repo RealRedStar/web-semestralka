@@ -15,6 +15,13 @@ class IntroductionTemplate implements IView
 
         $tplHeaders->getHTMLHeader($tplData["title"]);
 
+        if (isset($tplData["login-status"])) {
+            if ($tplData["login-status"] == "Success") {
+                header("");
+            } else {
+                echo "Login credentials are not correct!" . $_POST["username"] . " and " . $_POST["password"];
+            }
+        }
         ?>
 <div class="mt-5 text-center justify-content-center d-flex text-white" data-bs-theme="dark">
     <div class="justify-content-center align-items-center text-center col-lg-6 mx-2">
