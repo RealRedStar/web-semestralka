@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg bg-dark border-bottom" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="../../web-semestralka/resources/logos/navbar-logo.png" alt="Logo hlavní stránky" height="64" width="64">
+                <img src="../app/resources/logos/navbar-logo.png" alt="Logo hlavní stránky" height="64" width="64">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
