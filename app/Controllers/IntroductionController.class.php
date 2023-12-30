@@ -23,6 +23,11 @@ class IntroductionController implements IController
 
         $tplData["title"] = $pageTitle;
 
+        if (isset($_POST["logout-btn"]) and $_POST["logout-btn"] == "logout") {
+            $tplData["login-status"] = "Logout";
+            $_POST = array();
+        }
+
         if (isset($_POST["login-btn"]) and $_POST["login-btn"] == "login") {
             if (!isset($_POST["username"]) or !isset($_POST["password"])) {
                 $tplData["login-status"] = "Fail";

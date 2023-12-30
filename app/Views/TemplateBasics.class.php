@@ -8,7 +8,7 @@ namespace redstar\Views;
  */
 class TemplateBasics
 {
-    public function getHTMLHeader(string $pageTitle) {
+    public function getHTMLHeader(string $pageTitle, bool $logon) {
         ?>
 
         <!doctype html>
@@ -20,7 +20,7 @@ class TemplateBasics
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
             <link href="../../../web-semestralka/app/Resources/styles.css" rel="stylesheet">
         </head>
-        <body class="d-flex flex-column min-vh-100">
+        <body class="d-flex flex-column min-vh-100 bg-black" data-bs-theme="dark">
             <header>
                 <nav class="navbar navbar-expand-lg bg-dark border-bottom" data-bs-theme="dark">
                     <div class="container-fluid">
@@ -43,7 +43,29 @@ class TemplateBasics
                                 </li>
                             </ul>
                             <ul class="navbar-nav">
-                                <li class="nav-item dropdown">
+
+                                    <?php
+
+                                    if ($logon) {
+                                        ?>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link " href="user-account/<?php echo $_POST["username"]; ?>"> <?php echo $_POST["username"]; ?></a>
+                                        </li>
+                                        <li>
+                                            <form method="post">
+                                                <button href="#" class="nav-item nav-link" type="submit" name="logout-btn" value="logout">Odhlásit se</button>
+                                            </form>
+                                        </li>
+                                        </ul>
+                                        </div>
+                                        </div>
+                                        </nav>
+                                        </header>
+                                    <?php
+                                    }
+                                    else {
+                                        ?>
+                                        <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Přihlásit se
                                     </a>
@@ -88,7 +110,8 @@ class TemplateBasics
                     </div>
                 </nav>
             </header>
-<?php
+        <?php }
+
     }
 
     public function getHTMLFooter() {

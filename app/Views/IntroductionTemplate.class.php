@@ -13,13 +13,36 @@ class IntroductionTemplate implements IView
     {
         $tplHeaders = new TemplateBasics();
 
-        $tplHeaders->getHTMLHeader($tplData["title"]);
+
+        $logon = false;
+
+        if (isset($tplData["login-status"]) and $tplData["login-status"] == "Success") {
+            $logon = true;
+        }
+
+        $tplHeaders->getHTMLHeader($tplData["title"], $logon);
 
         if (isset($tplData["login-status"])) {
             if ($tplData["login-status"] == "Success") {
-                header("");
-            } else {
-                echo "Login credentials are not correct!" . $_POST["username"] . " and " . $_POST["password"];
+                echo '
+                <div class="alert alert-dismissible alert-success mx-5 mt-3">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>Úspěch!</strong> Přihlášení proběhlo úspěšně
+                </div>';
+
+
+            } elseif ($tplData["login-status"] == "Fail") {
+                echo '
+                <div class="alert alert-dismissible alert-danger mx-5 mt-3">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>Chyba!</strong> Zadali jste špatné uživatelské jméno a nebo heslo
+                </div>';
+            } elseif ($tplData["login-status"] == "Logout") {
+                echo '
+                <div class="alert alert-dismissible alert-primary mx-5 mt-3">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>Úspěch!</strong> Odhlášení proběhlo úspěšně.
+                </div>';
             }
         }
         ?>
