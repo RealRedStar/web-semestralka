@@ -39,6 +39,13 @@ const WEB_PAGES = array(
 
         // ClassBased šablona
         "view_class_name" => \redstar\Views\MatchesTemplate::class
+    ),
+    "auth" => array(
+        "title" => "Autentikace",
+
+        "controller_class_name" => \redstar\Controllers\AuthPageController::class,
+
+        "view_class_name" => \redstar\Views\AuthPageView::class
     )
 );
 

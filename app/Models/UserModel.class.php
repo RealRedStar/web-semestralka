@@ -51,6 +51,20 @@ class UserModel
         return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role);
     }
 
+    public static function getAllUsernames() : array {
+        $db = DatabaseModel::getDatabaseModel();
+        $data = $db->getAllUsernamesFromDatabase();
+
+        return $data;
+    }
+
+    public static function getAllEmails() : array {
+        $db = DatabaseModel::getDatabaseModel();
+        $data = $db->getAllEmailsFromDatabase();
+
+        return $data;
+    }
+
     public function getId(): int
     {
         return $this->id;

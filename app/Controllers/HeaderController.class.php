@@ -22,8 +22,6 @@ class HeaderController implements IController
         $tplData["title"] = $pageTitle;
 
 
-
-
         if (isset($_POST["logout-btn"]) and $_POST["logout-btn"] == "logout") {
             $tplData["login-status"] = "Logout";
             session_unset();
