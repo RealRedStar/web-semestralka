@@ -13,7 +13,6 @@ class IntroductionTemplate implements IView
 
     public function printOutput(array $tplData)
     {
-        $tplHeaders = new TemplateBasics();
 
 
 //        $logon = false;
