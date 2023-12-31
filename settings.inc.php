@@ -15,11 +15,12 @@ define("DB_USER","root");
 define("DB_PASS","root");
 
 /** Klic defaultni webove stranky. */
-const DEFAULT_WEB_PAGE_KEY = "uvod";
+const DEFAULT_WEB_PAGE_KEY = "home";
 
 /** Dostupne webove stranky. */
-const WEB_PAGES = array(//// Uvodni stranka ////
-    "uvod" => array(
+const WEB_PAGES = array(
+    //// Uvodni stranka ////
+    "home" => array(
         "title" => "Úvodní stránka",
 
         //// kontroler
@@ -30,6 +31,15 @@ const WEB_PAGES = array(//// Uvodni stranka ////
         "view_class_name" => \redstar\Views\IntroductionTemplate::class,
     ),
     //// KONEC: Uvodni stranka ////
+    "matches" => array(
+        "title" => "Seznam turnajů",
+
+        //// kontroler
+        "controller_class_name" => \redstar\Controllers\MatchesController::class,
+
+        // ClassBased šablona
+        "view_class_name" => \redstar\Views\MatchesTemplate::class
+    )
 );
 
 ?>

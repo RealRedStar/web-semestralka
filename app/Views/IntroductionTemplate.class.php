@@ -2,6 +2,8 @@
 
 namespace redstar\Views;
 
+use redstar\Controllers\HeaderController;
+
 /**
  * Šablona pro zobrazení úvodní stránky
  * @package redstar\Views
@@ -14,37 +16,22 @@ class IntroductionTemplate implements IView
         $tplHeaders = new TemplateBasics();
 
 
-        $logon = false;
+//        $logon = false;
+//
+//        if (isset($tplData["login-status"]) and $tplData["login-status"] == "Success") {
+//            $logon = true;
+//        }
+        $Header = new HeaderController();
+        $HeaderView = new HeaderView();
 
-        if (isset($tplData["login-status"]) and $tplData["login-status"] == "Success") {
-            $logon = true;
-        }
+        $tplData = $Header->show($tplData["title"]);
 
-        $tplHeaders->getHTMLHeader($tplData["title"], $logon);
+//        $Header->show($tplData["title"]);
 
-        if (isset($tplData["login-status"])) {
-            if ($tplData["login-status"] == "Success") {
-                echo '
-                <div class="alert alert-dismissible alert-success mx-5 mt-3">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>Úspěch!</strong> Přihlášení proběhlo úspěšně
-                </div>';
+//        $tplHeaders->getHTMLHeader($tplData["title"], $logon);
 
+        $HeaderView->printOutput($tplData);
 
-            } elseif ($tplData["login-status"] == "Fail") {
-                echo '
-                <div class="alert alert-dismissible alert-danger mx-5 mt-3">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>Chyba!</strong> Zadali jste špatné uživatelské jméno a nebo heslo
-                </div>';
-            } elseif ($tplData["login-status"] == "Logout") {
-                echo '
-                <div class="alert alert-dismissible alert-primary mx-5 mt-3">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>Úspěch!</strong> Odhlášení proběhlo úspěšně.
-                </div>';
-            }
-        }
         ?>
 <div class="mt-5 text-center justify-content-center d-flex text-white" data-bs-theme="dark">
     <div class="justify-content-center align-items-center text-center col-lg-6 mx-2">
@@ -111,6 +98,6 @@ class IntroductionTemplate implements IView
 
 <?php
 
-        $tplHeaders->getHTMLFooter();
+        $HeaderView->getHTMLFooter();
     }
 }
