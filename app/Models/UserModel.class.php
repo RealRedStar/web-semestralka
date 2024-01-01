@@ -31,7 +31,7 @@ class UserModel
     public static function getUserByUsername(string $username): ?UserModel
     {
         $db = DatabaseModel::getDatabaseModel();
-        $data = $db->getUserData($username);
+        $data = $db->getUserDataByUsername($username);
 
         if (!isset($data["id_user"])) {
             return null;
@@ -47,6 +47,26 @@ class UserModel
         }
 
 
+
+        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role);
+    }
+
+    public static function getUserByEmail(string $email): ?UserModel {
+        $db = DatabaseModel::getDatabaseModel();
+        $data = $db->getUserDataByEmail($email);
+
+        if (!isset($data["id_user"])) {
+            return null;
+        } else {
+            $id = $data["id_user"];
+            $username = $data["username"] ?? "";
+            $password = $data["password"] ?? "";
+            $email = $data["email"] ?? "";
+            $firstName = $data["first_name"] ?? "";
+            $lastName = $data["last_name"] ?? "";
+            $imageUrl = $data["image_name"] ?? "";
+            $role = $data["role_id_role"] ?? 0;
+        }
 
         return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role);
     }

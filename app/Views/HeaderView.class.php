@@ -119,7 +119,7 @@ class HeaderView implements IView
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Registrace</a>
+                <a class="nav-link" href="?page=auth&part=registration">Registrace</a>
             </li>
             </ul>
             </div>

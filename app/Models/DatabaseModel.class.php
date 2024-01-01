@@ -45,10 +45,19 @@ class DatabaseModel
         return $stmt->fetch();
     }
 
-    public function getUserData(string $username) {
+    public function getUserDataByUsername(string $username) {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = :username");
 
         $stmt->bindValue(":username", $username);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function getUserDataByEmail(string $email) {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
+
+        $stmt->bindValue(":email", $email);
         $stmt->execute();
 
         return $stmt->fetch();
