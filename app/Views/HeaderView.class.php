@@ -31,7 +31,7 @@ class HeaderView implements IView
         <html lang="cs">
         <head>
             <meta charset="UTF-8">
-            <title><?php echo $pageTitle ?></title>
+            <title><?php echo htmlspecialchars($pageTitle) ?></title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
             <link href="../../../web-semestralka/app/Resources/styles.css" rel="stylesheet">
@@ -65,18 +65,13 @@ class HeaderView implements IView
         if (isset($user)) {
             ?>
             <li class="nav-item dropdown">
-                <a class="nav-link " href="user-account/<?php echo $user->getUsername(); ?>"> <?php echo $user->getUsername(); ?></a>
+                <a class="nav-link " href="user-account/<?php echo htmlspecialchars($user->getUsername()); ?>"> <?php echo htmlspecialchars($user->getUsername()); ?></a>
             </li>
             <li>
                 <form method="post">
                     <button href="#" class="nav-item nav-link" type="submit" name="logout-btn" value="logout">Odhlásit se</button>
                 </form>
             </li>
-            </ul>
-            </div>
-            </div>
-            </nav>
-            </header>
             <?php
         }
         else {
@@ -121,13 +116,13 @@ class HeaderView implements IView
             <li class="nav-item">
                 <a class="nav-link" href="?page=auth&part=registration">Registrace</a>
             </li>
+        <?php } ?>
             </ul>
             </div>
             </div>
             </nav>
             </header>
-        <?php }
-
+        <?php
         if (isset($tplData["login-status"])) {
             if ($tplData["login-status"] == "Success") {
                 echo '

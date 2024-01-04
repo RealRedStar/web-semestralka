@@ -2,7 +2,7 @@
 
 namespace redstar\Models;
 
-class UserModel
+class UserModel implements \JsonSerializable
 {
     private DatabaseModel $db;
     private int $id;
@@ -11,11 +11,25 @@ class UserModel
     private string $email;
     private string $firstName;
     private string $lastName;
-    private string $imageUrl;
-    private int $role;
+    private string $imageName;
+    private RoleModel $role;
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'password' => $this->password,
+            'email' => $this->email,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'imageUrl' => $this->imageName,
+            'role' => $this->role
+        ];
+    }
 
 
-    public function __construct(int $id, string $username, string $password, string $email, string $firstName, string $lastName, string $imageUrl, int $role)
+    public function __construct(int $id, string $username, string $password, string $email, string $firstName, string $lastName, string $imageUrl, RoleModel $role)
     {
         $this->id = $id;
         $this->username = $username;
@@ -23,8 +37,28 @@ class UserModel
         $this->email = $email;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->imageUrl = $imageUrl;
+        $this->imageName = $imageUrl;
         $this->role = $role;
+    }
+
+    public static function getUserById(int $id): ?UserModel {
+        $db = DatabaseModel::getDatabaseModel();
+        $data = $db->getUserDataById($id);
+
+        if (!isset($data["id_user"])) {
+            return null;
+        } else {
+            $id = $data["id_user"];
+            $username = $data["username"] ?? "";
+            $password = $data["password"] ?? "";
+            $email = $data["email"] ?? "";
+            $firstName = $data["first_name"] ?? "";
+            $lastName = $data["last_name"] ?? "";
+            $imageUrl = $data["image_name"] ?? "";
+            $role = RoleModel::getRoleById($data["role_id_role"]);
+        }
+
+        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role);
     }
 
 
@@ -43,10 +77,8 @@ class UserModel
             $firstName = $data["first_name"] ?? "";
             $lastName = $data["last_name"] ?? "";
             $imageUrl = $data["image_name"] ?? "";
-            $role = $data["role_id_role"] ?? 0;
+            $role = RoleModel::getRoleById($data["role_id_role"]);
         }
-
-
 
         return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role);
     }
@@ -115,18 +147,14 @@ class UserModel
         return $this->lastName;
     }
 
-    public function getImageUrl(): string
+    public function getImageName(): string
     {
-        return $this->imageUrl;
+        return $this->imageName;
     }
 
     public function getRole(): int
     {
         return $this->role;
     }
-
-
-
-
 
 }

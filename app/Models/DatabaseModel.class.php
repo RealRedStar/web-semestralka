@@ -24,7 +24,6 @@ class DatabaseModel
         $this->pdo = new \PDO("mysql:host=".DB_SERVER."; dbname=".DB_NAME, DB_USER, DB_PASS);
 
     }
-
     /**
      * Tovární metoda pro poskytnutí singletonu databázového modelu.
      * @return DatabaseModel Databázový model
@@ -40,6 +39,16 @@ class DatabaseModel
         $stmt = $this->pdo->prepare("SELECT username, password FROM users WHERE username = :username");
 
         $stmt->bindValue(":username", $username);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function getUserDataById(int $id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id_user = :id");
+
+        $stmt->bindValue(":id", $id);
         $stmt->execute();
 
         return $stmt->fetch();
@@ -102,5 +111,38 @@ class DatabaseModel
         }
 
         return $data;
+    }
+
+    public function getMatchByIdFromDatabase(int $id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM matches WHERE id_match = :id_match");
+
+        $stmt->bindValue(":id_match", $id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllMatchesFromDatabase() {
+        $stmt = $this->pdo->prepare("SELECT * FROM matches");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMatchesCount() {
+        $stmt = $this->pdo->prepare("SELECT COUNT(id_match) FROM matches");
+        $stmt->execute();
+
+        return $stmt->fetch()[0];
+    }
+
+    public function getRoleByIdFromDatabase(int $id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM roles WHERE id_role = :id_role");
+
+        $stmt->bindValue(":id_role", $id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

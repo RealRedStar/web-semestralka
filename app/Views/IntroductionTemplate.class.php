@@ -40,8 +40,12 @@ class IntroductionTemplate implements IView
     </div>
 </div>
 <div class="d-flex mt-3 justify-content-center gap-3">
-    <button class="btn btn-primary">Zaregistrovat se</button>
-    <button class="btn btn-secondary">Do seznamu turnajů</button>
+    <?php if (isset($tplData["user"])) {
+        echo '<a href="?page=match&match=new&edit=true" class="btn btn-primary">Vytvořit novou kampaň</a>';
+    } else {
+        echo '<a href="?page=auth&part=registration" class="btn btn-primary">Zaregistrovat se</a>';
+    } ?>
+    <a href="?page=matches" class="btn btn-secondary">Do seznamu kampaní</a>
 </div>
 <h6 class="display-6 mt-5 fw-bold text-white text-center">Proč se registrovat?</h6>
 
