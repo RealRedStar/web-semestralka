@@ -40,6 +40,12 @@ const WEB_PAGES = array(
         // ClassBased šablona
         "view_class_name" => \redstar\Views\MatchesTemplate::class
     ),
+    "match" => array(
+        "title" => "Kampaň",
+
+        "controller_class_name" => \redstar\Controllers\MatchController::class,
+        "view_class_name" => \redstar\Views\MatchView::class
+    ),
     "auth" => array(
         "title" => "Autentikace",
 

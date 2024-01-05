@@ -97,10 +97,62 @@ class UserModel implements \JsonSerializable
             $firstName = $data["first_name"] ?? "";
             $lastName = $data["last_name"] ?? "";
             $imageUrl = $data["image_name"] ?? "";
-            $role = $data["role_id_role"] ?? 0;
+            $role = RoleModel::getRoleById($data["role_id_role"]);
         }
 
         return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role);
+    }
+
+    public static function getPlayersFromMatchId(int $matchId): array {
+        $db = DatabaseModel::getDatabaseModel();
+
+        $ids = $db->getMatchPlayerIdsFromDatabase($matchId);
+        $players = array();
+
+        for ($i = 0; $i < sizeof($ids); $i++) {
+            $userData = $db->getUserDataById($ids[$i]);
+
+            if (isset($userData)) {
+                $id = $userData["id_user"];
+                $username = $userData["username"];
+                $password = $userData["password"];
+                $email = $userData["email"];
+                $firstName = $userData["first_name"] ?? "";
+                $lastName = $userData["last_name"] ?? "";
+                $imageName = $userData["image_name"] ?? "";
+                $role = RoleModel::getRoleById($userData["role_id_role"]);
+
+                $players[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageName, $role);
+            }
+        }
+
+        return $players;
+    }
+    public static function getBannedPlayersFromMatchId(int $id): array
+    {
+        $db = DatabaseModel::getDatabaseModel();
+
+        $ids = $db->getMatchBannedPlayerIdsFromDatabase($id);
+        $players = array();
+
+        for ($i = 0; $i < sizeof($ids); $i++) {
+            $userData = $db->getUserDataById($ids[$i]["id_user"]);
+
+            if (isset($userData)) {
+                $id = $userData["id_user"];
+                $username = $userData["username"];
+                $password = $userData["password"];
+                $email = $userData["email"];
+                $firstName = $userData["first_name"] ?? "";
+                $lastName = $userData["last_name"] ?? "";
+                $imageName = $userData["image_name"] ?? "";
+                $role = RoleModel::getRoleById($userData["role_id_role"]);
+
+                $players[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageName, $role);
+            }
+        }
+
+        return $players;
     }
 
     public static function getAllUsernames() : array {
@@ -152,7 +204,7 @@ class UserModel implements \JsonSerializable
         return $this->imageName;
     }
 
-    public function getRole(): int
+    public function getRole(): RoleModel
     {
         return $this->role;
     }

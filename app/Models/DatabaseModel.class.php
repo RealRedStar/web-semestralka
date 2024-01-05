@@ -137,6 +137,26 @@ class DatabaseModel
         return $stmt->fetch()[0];
     }
 
+    public function getMatchPlayerIdsFromDatabase(int $matchId): array {
+        $stmt = $this->pdo->prepare("SELECT id_user FROM players_list WHERE id_match = :id_match");
+
+        $stmt->bindValue(":id_match", $matchId);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMatchBannedPlayerIdsFromDatabase(int $matchId): array {
+        $stmt = $this->pdo->prepare("SELECT id_user FROM banned_players_from_matches WHERE id_match = :id_match");
+
+        $stmt->bindValue(":id_match", $matchId);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getRoleByIdFromDatabase(int $id) {
         $stmt = $this->pdo->prepare("SELECT * FROM roles WHERE id_role = :id_role");
 
