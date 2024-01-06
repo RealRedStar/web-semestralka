@@ -54,9 +54,6 @@ class HeaderView implements IView
             <li class="nav-item">
                 <a class="nav-link <?php echo $pageTitle == 'Seznam turnajů' ? 'active' : '';?>" href="?page=matches">Seznam turnajů</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link <?php echo $pageTitle == 'TODO' ? 'active' : '';?>" href="#">O projektu</a>
-            </li>
         </ul>
         <ul class="navbar-nav">
 

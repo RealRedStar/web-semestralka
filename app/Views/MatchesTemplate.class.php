@@ -36,8 +36,9 @@ class MatchesTemplate implements IView
         </div>
         <?php
             if ($logon) {
-                echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>';
-                echo '<script src="../../../web-semestralka/app/Resources/scripts/matches-page.js" type="application/javascript" onload="loadMatches()"></script>';
+                $loadAll = $tplData["user"]->getRole()->getPermissions() > 1;
+                echo "<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>";
+                echo "<script src='../../../web-semestralka/app/Resources/scripts/matches-page.js' type='application/javascript' onload='loadMatches($loadAll)'></script>";
             }
         ?>
         <?php

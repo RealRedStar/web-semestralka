@@ -51,7 +51,7 @@ class DatabaseModel
         $stmt->bindValue(":id", $id);
         $stmt->execute();
 
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getUserDataByUsername(string $username) {
@@ -164,5 +164,64 @@ class DatabaseModel
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function addPlayerToMatch(int $playerId, int $matchId): bool {
+        $stmt = $this->pdo->prepare("INSERT INTO players_list (id_match, id_user) VALUES (:id_match, :id_player)");
+
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->bindValue(":id_player", $playerId);
+
+        return $stmt->execute();
+    }
+
+    public function removePlayerFromMatch(int $playerId, int $matchId): bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM players_list WHERE (id_match = :id_match and id_user = :id_player)");
+
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->bindValue(":id_player", $playerId);
+
+        return $stmt->execute();
+    }
+
+    public function banPlayerFromMatch(int $playerId, int $matchId): bool
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO banned_players_from_matches (id_user, id_match) VALUES (:id_player, :id_match)");
+
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->bindValue(":id_player", $playerId);
+
+        return $stmt->execute();
+    }
+
+    public function unbanPlayerFromMatch(int $playerId, int $matchId): bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM banned_players_from_matches WHERE (id_match = :id_match and id_user = :id_player)");
+
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->bindValue(":id_player", $playerId);
+
+        return $stmt->execute();
+    }
+
+    public function getNationByTag(string $tag) {
+        $stmt = $this->pdo->prepare("SELECT * FROM nations WHERE tag = :tag");
+
+        $stmt->bindValue(":tag", $tag);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function getPlayersNationTagFromMatch(int $playerId, int $matchId)
+    {
+        $stmt = $this->pdo->prepare("SELECT desired_nation_tag FROM players_list WHERE id_match = :id_match and id_user = :id_player");
+
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->bindValue(":id_player", $playerId);
+        $stmt->execute();
+
+        return $stmt->fetch();
     }
 }

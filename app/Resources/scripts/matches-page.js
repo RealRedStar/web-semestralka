@@ -1,7 +1,7 @@
 const matchesDiv = document.getElementById("matches-div")
 
 
-async function loadMatches() {
+async function loadMatches(loadAll) {
     let matches = await retrieveMatches()
     for (let i = 0; i<matches.length; i++) {
         let div = document.createElement('div');
@@ -15,17 +15,20 @@ async function loadMatches() {
 
         let statusElement = ""
 
-        //TODO: Dodělat mechanismus pro zjištění, zda je kampaň plná
-        let isFull = false
+        let playersCount = Object.keys(matches[i]["players"]).length
+
+        let isFull = playersCount === parseInt(matches[i]["maxPlayers"])
         if (isFull) {
+            if (!loadAll) {
+                continue;
+            }
             statusElement = `
                      <p class="card-text text-danger" id="status">
                         <b>Stav: </b>Plný
                     </p>
             `
         }
-
-        if (matches[i]["dateFinished"] !== "") {
+        else if (matches[i]["dateFinished"] !== "") {
             statusElement = `
                     <p class="card-text" id="date-finished">
                         <b>Datum ukončení: </b>${matches[i]["dateFinished"]}
@@ -41,7 +44,7 @@ async function loadMatches() {
         }
         div.classList.add("card", "text-white", "bg-dark", "mb-3", "mx-5", "my-5", "border")
         div.innerHTML = `
-                <div class="card-header d-inline-flex align-items-center">
+                <div class="card-header d-inline-flex align-items-center overflow-x-auto">
                     <img class="border" src="${imageUrl}" alt="Logo of the match" height="64" width="64">
                     <a href="?page=match&match-id=${matches[i]["id"]}" class="ms-3"><h1>${matches[i]["name"]}</h1></a>
                 </div>
@@ -50,10 +53,13 @@ async function loadMatches() {
                         ${matches[i]["description"]}
                     </p>
                     <p class="card-text" id="date-created">
-                        <b>Datum vytvoření: </b>${matches[i]["dateCreated"]}
+                        <b>Datum vytvoření (Y-M-D): </b>${matches[i]["dateCreated"]}
+                    </p>
+                    <p class="card-text" id="date-created">
+                        <b>Datum zahájení (Y-M-D): </b>${matches[i]["dateStarting"]}
                     </p>
                     <p class="card-text" id="players">
-                        <b>Počet hráčů: </b>0/${matches[i]["maxPlayers"]}
+                        <b>Počet hráčů: </b>${playersCount}/${matches[i]["maxPlayers"]}
                     </p>
                     ${statusElement}
                     <div>

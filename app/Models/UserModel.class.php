@@ -4,7 +4,6 @@ namespace redstar\Models;
 
 class UserModel implements \JsonSerializable
 {
-    private DatabaseModel $db;
     private int $id;
     private string $username;
     private string $password;
@@ -110,7 +109,7 @@ class UserModel implements \JsonSerializable
         $players = array();
 
         for ($i = 0; $i < sizeof($ids); $i++) {
-            $userData = $db->getUserDataById($ids[$i]);
+            $userData = $db->getUserDataById($ids[$i]["id_user"]);
 
             if (isset($userData)) {
                 $id = $userData["id_user"];

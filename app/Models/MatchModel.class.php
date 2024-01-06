@@ -48,10 +48,9 @@ class MatchModel implements \JsonSerializable
         $db = DatabaseModel::getDatabaseModel();
         $purifier = \HTMLPurifier::getInstance();
 
-        $nothingAllowedConfig = $purifier->config;
+        $nothingAllowedConfig = \HTMLPurifier_Config::createDefault();
+        $CKETagsAllowed = \HTMLPurifier_Config::createDefault();
         $nothingAllowedConfig->set('HTML.Allowed', '');
-
-        $CKETagsAllowed = $purifier->config;
         // TODO: doplnit tagy
         $CKETagsAllowed->set('HTML.Allowed', '');
 
@@ -76,7 +75,7 @@ class MatchModel implements \JsonSerializable
             if (isset($data["date_finished"])) {
                 $dateFinished = $data["date_finished"];
             }
-            $imageName = $data["image_name"];
+            $imageName = $data["image_name"] ?? "";
 
             return new MatchModel($id, $ownerId, $name, $description, $maxPlayers, $dateCreated, $dateStarting, $dateFinished, $imageName, $players, $bannedPlayers);
         }
@@ -112,7 +111,7 @@ class MatchModel implements \JsonSerializable
                 if (isset($data[$i]["date_finished"])) {
                     $dateFinished = $data[$i]["date_finished"];
                 }
-                $imageName = $data[$i]["image_name"];
+                $imageName = $data[$i]["image_name"] ?? "";
                 $players = UserModel::getPlayersFromMatchId($id);
                 $bannedPlayers = UserModel::getBannedPlayersFromMatchId($id);
 
@@ -120,6 +119,74 @@ class MatchModel implements \JsonSerializable
             }
             return $matches;
         }
+    }
+
+    public static function addPlayerToMatch(int $playerId, int $matchId) {
+        $match = self::getMatchById($matchId);
+        $player = UserModel::getUserById($playerId);
+        if (!isset($match))
+            return;
+
+        if (!isset($player))
+            return;
+
+        if (in_array($player, $match->getPlayers()))
+            return;
+
+        $db = DatabaseModel::getDatabaseModel();
+        $db->addPlayerToMatch($playerId, $matchId);
+    }
+
+    public static function banPlayerFromMatch(int $playerId, int $matchId)
+    {
+        $match = self::getMatchById($matchId);
+        $player = UserModel::getUserById($playerId);
+        if (!isset($match))
+            return;
+
+        if (!isset($player))
+            return;
+
+        if (!in_array($player, $match->getPlayers()))
+            return;
+
+        $db = DatabaseModel::getDatabaseModel();
+        $db->removePlayerFromMatch($playerId, $matchId);
+        $db->banPlayerFromMatch($playerId, $matchId);
+    }
+
+    public static function removePlayerFromMatch(int $playerId, int $matchId)
+    {
+        $match = self::getMatchById($matchId);
+        $player = UserModel::getUserById($playerId);
+        if (!isset($match))
+            return;
+
+        if (!isset($player))
+            return;
+
+        if (!in_array($player, $match->getPlayers()))
+            return;
+
+        $db = DatabaseModel::getDatabaseModel();
+        $db->removePlayerFromMatch($playerId, $matchId);
+    }
+
+    public static function unbanPlayerFromMatch(int $playerId, int $matchId)
+    {
+        $match = self::getMatchById($matchId);
+        $player = UserModel::getUserById($playerId);
+        if (!isset($match))
+            return;
+
+        if (!isset($player))
+            return;
+
+        if (!in_array($player, $match->getBannedPlayers()))
+            return;
+
+        $db = DatabaseModel::getDatabaseModel();
+        $db->unbanPlayerFromMatch($playerId, $matchId);
     }
 
     public function getDateCreated(): string
