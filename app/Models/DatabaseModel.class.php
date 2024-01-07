@@ -72,7 +72,8 @@ class DatabaseModel
         return $stmt->fetch();
     }
 
-    public function addUserToDatabase($data) {
+    public function addUserToDatabase($data): bool
+    {
         $stmt = $this->pdo->prepare("INSERT INTO users (username, password, email, first_name, last_name, image_name, role_id_role) VALUES (:username, :password, :email, :firstName, :lastName, :imageName, :role)");
 
         $stmt->bindValue(":username", $data["username"]);
@@ -85,7 +86,8 @@ class DatabaseModel
         return $stmt->execute();
     }
 
-    public function getAllUsernamesFromDatabase() {
+    public function getAllUsernamesFromDatabase(): array
+    {
         $stmt = $this->pdo->prepare("SELECT username FROM users");
 
         $stmt->execute();
@@ -99,7 +101,8 @@ class DatabaseModel
         return $data;
     }
 
-    public function getAllEmailsFromDatabase() {
+    public function getAllEmailsFromDatabase(): array
+    {
         $stmt = $this->pdo->prepare("SELECT email FROM users");
 
         $stmt->execute();
@@ -123,7 +126,7 @@ class DatabaseModel
     }
 
     public function getAllMatchesFromDatabase() {
-        $stmt = $this->pdo->prepare("SELECT * FROM matches");
+        $stmt = $this->pdo->prepare("SELECT * FROM matches ORDER BY date_created DESC ");
 
         $stmt->execute();
 
@@ -251,7 +254,8 @@ class DatabaseModel
         return $stmt->fetch();
     }
 
-    public function changePlayersNationFromMatch(int $playerId, int $matchId, $nationTag) {
+    public function changePlayersNationFromMatch(int $playerId, int $matchId, $nationTag): bool
+    {
         $stmt = $this->pdo->prepare("UPDATE players_list SET desired_nation_tag = :nationTag WHERE id_match = :id_match AND id_user = :id_player");
 
         $stmt->bindValue(":nationTag", $nationTag);
