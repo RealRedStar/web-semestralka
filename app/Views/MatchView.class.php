@@ -46,6 +46,9 @@ class MatchView implements IView
                         <p class="card-text" id="description">
                             <?php echo $match->getDescription()?>
                         </p>
+                        <p class="card-text" id="description">
+                            <b>Tvůrce kampaně: </b><?php echo htmlspecialchars($match->getOwner()->getUsername())?>
+                        </p>
                         <p class="card-text" id="date-created">
                             <b>Datum vytvoření (Y-M-D): </b><?php echo $match->getDateCreated() ?>
                         </p>
@@ -76,18 +79,55 @@ class MatchView implements IView
                                 $playerId = $players[$i]->getId();
                                 $playerName = htmlspecialchars($players[$i]->getUsername());
                                 $playerIsOwnerInTheGame = $loggedUser->getId() == $playerId;
+                                $playerIsLoggedUser = $loggedUser->getId() == $playerId;
                                 $playersNation = NationModel::getPlayersNationFromMatch($playerId, $matchId);
                                 $playersNation = $playersNation ?? NationModel::getDefaultNation();
                                 $playersNationName = $playersNation->getName();
                                 if ($isOwner or $permissions > 1) {
-                                    if (!$playerIsOwnerInTheGame) {
+                                    echo
+                                    "<tr class='table-active'>
+                                        <th scope='row'>$playerId</th>
+                                        <td>$playerName</td>
+                                        <td>
+                                            <select id='desiredNationSelect$i' onchange='changePlayersDesiredNation($playerId, $matchId, $i)'>";
+
+                                    for ($k = 0; $k < sizeof($tplData["available-nations"]); $k++) {
+                                        $nation = $tplData["available-nations"][$k];
+                                        $nationTag = $nation->getTag();
+                                        $nationName = $nation->getName();
+                                        if ($nation != $playersNation)
+                                            echo "<option value='$nationName'>$nationName</option>";
+                                    }
+                                    echo "<option value='$playersNationName' selected>$playersNationName</option>";
+                                    echo "
+                                            </select>
+                                        </td>
+                                        <td>Column content</td>";
+                                        if (!$playerIsOwnerInTheGame)
+                                            echo "<td><button name='ban-btn' value='$playerId' class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#banModal' onclick='targetPlayer($playerId, $matchId)'>Vyhodit</button></td>";
+                                        else
+                                            echo "<td></td>";
+                                    echo "</tr>";
+                                } else {
+                                    if ($playerIsLoggedUser) {
                                         echo
                                         "<tr class='table-active'>
                                             <th scope='row'>$playerId</th>
                                             <td>$playerName</td>
-                                            <td>$playersNationName</td>
+                                            <td>
+                                                <select id='desiredNationSelect$i' onchange='changePlayersDesiredNation($playerId, $matchId, $i)'>";
+                                        for ($k = 0; $k < sizeof($tplData["available-nations"]); $k++) {
+                                            $nation = $tplData["available-nations"][$k];
+                                            $nationTag = $nation->getTag();
+                                            $nationName = $nation->getName();
+                                            if ($nation != $playersNation)
+                                                echo "<option value='$nationName'>$nationName</option>";
+                                        }
+                                        echo "<option value='$playersNationName' selected>$playersNationName</option>";
+                                        echo "
+                                                </select>
+                                            </td>
                                             <td>Column content</td>
-                                            <td><button name='ban-btn' value='$playerId' class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#banModal' onclick='targetPlayer($playerId, $matchId)'>Vyhodit</button></td>
                                         </tr>";
                                     } else {
                                         echo
@@ -96,17 +136,8 @@ class MatchView implements IView
                                             <td>$playerName</td>
                                             <td>$playersNationName</td>
                                             <td>Column content</td>
-                                            <td></td>
                                         </tr>";
                                     }
-                                } else {
-                                    echo
-                                        "<tr class='table-active'>
-                                            <th scope='row'>$playerId</th>
-                                            <td>$playerName</td>
-                                            <td>$playersNationName</td>
-                                            <td>Column content</td>
-                                        </tr>";
                                 }
                             }
                             ?>

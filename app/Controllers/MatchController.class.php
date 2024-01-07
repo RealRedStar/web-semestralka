@@ -3,6 +3,8 @@
 namespace redstar\Controllers;
 
 use redstar\Models\MatchModel;
+use redstar\Models\NationModel;
+use redstar\Models\UserModel;
 
 class MatchController implements IController
 {
@@ -37,7 +39,12 @@ class MatchController implements IController
             return $tplData;
         }
 
-        $match = $this->retrieveMatch($_GET["match-id"]);
+        try {
+            $match = $this->retrieveMatch($_GET["match-id"]);
+        } catch (\Error) {
+            $tplData["error"] = "Nastala chyba při načítání kampaně";
+            return $tplData;
+        }
 
         if (!isset($match)) {
             $tplData["error"] = "Kampaň nebyla nalezena";
@@ -85,10 +92,23 @@ class MatchController implements IController
             $tplData["user-is-in-game"] = false;
         }
 
+        $availableNations = NationModel::getAvailableNationsFromMatch($match->getId());
+        $tplData["available-nations"] = $availableNations;
+
+        if (isset($_POST["change-nation"])) {
+            if (!isset($_POST["nation-name"]) or !isset($_POST["player-id"]) or !isset($match)) {
+                exit();
+            }
+            $nation = NationModel::getNationByName($_POST["nation-name"]);
+            if (in_array($nation, $availableNations)) {
+                $this->changePlayersDesiredNation($_POST["player-id"], $match->getId(), $_POST["nation-name"]);
+            }
+            exit();
+        }
+
         if (isset($_GET["edit"]) and $_GET["edit"] == "true") {
             $tplData["edit"] = true;
         }
-
 
         return $tplData;
     }
@@ -111,6 +131,10 @@ class MatchController implements IController
 
     private function unbanPlayerFromMatch(int $playerId, int $matchId) {
         MatchModel::unbanPlayerFromMatch($playerId, $matchId);
+    }
+
+    private function changePlayersDesiredNation(int $playerId, int $matchId, string $nationName) {
+        NationModel::changePlayersNationFromMatch($playerId, $matchId, $nationName);
     }
 
 }

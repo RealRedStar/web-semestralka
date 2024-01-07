@@ -214,6 +214,32 @@ class DatabaseModel
         return $stmt->fetch();
     }
 
+
+    public function getNationByName(string $name) {
+        $stmt = $this->pdo->prepare("SELECT * FROM nations WHERE name = :name");
+
+        $stmt->bindValue(":name", $name);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function getAllNationsFromDatabase() {
+        $stmt = $this->pdo->prepare("SELECT * FROM nations");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getOccupiedNationTagsFromMatch(int $idMatch) {
+        $stmt = $this->pdo->prepare("SELECT desired_nation_tag FROM players_list WHERE id_match = :id_match");
+
+        $stmt->bindValue(":id_match", $idMatch);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     public function getPlayersNationTagFromMatch(int $playerId, int $matchId)
     {
         $stmt = $this->pdo->prepare("SELECT desired_nation_tag FROM players_list WHERE id_match = :id_match and id_user = :id_player");
@@ -223,5 +249,15 @@ class DatabaseModel
         $stmt->execute();
 
         return $stmt->fetch();
+    }
+
+    public function changePlayersNationFromMatch(int $playerId, int $matchId, $nationTag) {
+        $stmt = $this->pdo->prepare("UPDATE players_list SET desired_nation_tag = :nationTag WHERE id_match = :id_match AND id_user = :id_player");
+
+        $stmt->bindValue(":nationTag", $nationTag);
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->bindValue(":id_player", $playerId);
+
+        return $stmt->execute();
     }
 }
