@@ -305,4 +305,42 @@ class DatabaseModel
 
         return $stmt->execute();
     }
+
+    public function getPlayersStatusFromMatch($playerId, $matchId)
+    {
+        $stmt = $this->pdo->prepare("SELECT status FROM players_list WHERE id_user = :id_user AND id_match = :id_match");
+        $stmt->bindValue(":id_user", $playerId);
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    public function setPlayerStatusFromMatch(int $playerId, int $matchId, string $status): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE players_list SET status = :status WHERE id_match = :id_match and id_user = :id_player");
+        $stmt->bindValue(":status", $status);
+        $stmt->bindValue(":id_match", $matchId);
+        $stmt->bindValue(":id_player", $playerId);
+
+        return $stmt->execute();
+    }
+
+    public function getAllRolesFromDatabase()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM roles");
+//        $stmt->bindValue(":roles", "roles");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function changeUserRole(int $userId, int $roleId): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE users SET role_id_role = :id_role WHERE id_user = :id_user");
+        $stmt->bindValue(":id_role", $roleId);
+        $stmt->bindValue(":id_user", $userId);
+
+        return $stmt->execute();
+    }
 }

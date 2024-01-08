@@ -2,6 +2,8 @@
 
 namespace redstar\Models;
 
+use http\Client\Curl\User;
+
 class RoleModel implements \JsonSerializable
 {
     private int $id;
@@ -33,6 +35,42 @@ class RoleModel implements \JsonSerializable
         $permissions = $data["permissions"];
 
         return new RoleModel($id, $name, $permissions);
+    }
+
+    public static function getAllRoles(): array
+    {
+        $db = DatabaseModel::getDatabaseModel();
+
+        $data = $db->getAllRolesFromDatabase();
+
+        $roles = array();
+
+        for ($i = 0; $i < sizeof($data); $i++) {
+            $id = $data[$i]["id_role"];
+            $name = $data[$i]["name"];
+            $permissions = $data[$i]["permissions"];
+            $roles[$i] = new RoleModel($id, $name, $permissions);
+        }
+
+        return $roles;
+    }
+
+    public static function changeUserRole(int $userId, int $roleId)
+    {
+        $db = DatabaseModel::getDatabaseModel();
+
+        $user = UserModel::getUserById($userId);
+        $role = self::getRoleById($roleId);
+
+        if (!isset($user)) {
+            return;
+        }
+
+        if (!isset($role)) {
+            return;
+        }
+
+        $db->changeUserRole($userId, $roleId);
     }
 
     public function getId(): int

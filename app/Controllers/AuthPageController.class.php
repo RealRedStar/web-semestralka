@@ -11,7 +11,6 @@ class AuthPageController implements IController
 
     public function show(string $pageTitle): array
     {
-        // TODO: Implement show() method.
 
         $header = new HeaderController();
 
@@ -86,16 +85,6 @@ class AuthPageController implements IController
                 return true;
         }
     }
-
-//    public function loadUsernames() {
-//        $data = UserModel::getAllUsernames();
-//        echo json_encode($data);
-//    }
-//
-//    public function loadEmails() {
-//        $data = UserModel::getAllEmails();
-//        echo json_encode($data);
-//    }
 
     public function registerUser(): bool {
         $data = array();

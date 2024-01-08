@@ -28,6 +28,12 @@ class MatchController implements IController
             return $tplData;
         }
 
+        if (isset($_POST["remove-match-btn"])) {
+            MatchModel::removeMatch($_POST["remove-match-btn"]);
+            $tplData["success"] = "Kampaň byla úspěšně odstraněna.";
+            return $tplData;
+        }
+
         if (!isset($_GET["match-id"])) {
             $tplData["error"] = "Kampaň nebyla specifikována";
             return $tplData;
@@ -104,6 +110,13 @@ class MatchController implements IController
                 $this->changePlayersDesiredNation($_POST["player-id"], $match->getId(), $_POST["nation-name"]);
             }
             exit();
+        }
+
+        if (isset($_POST["change-status"])) {
+            if (!isset($_POST["status"]) or !isset($_POST["player-id"]) or !isset($match)) {
+                exit();
+            }
+            MatchModel::setPlayerStatusFromMatch($_POST["player-id"], $match->getId(), $_POST["status"]);
         }
 
         if (isset($_GET["edit"]) and $_GET["edit"] == "true") {

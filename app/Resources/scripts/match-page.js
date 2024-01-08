@@ -53,8 +53,35 @@ async function changePlayersDesiredNation(playerId, matchId, selectElementId) {
     window.location.href = `?page=match&match-id=${currentMatchId}`
 }
 
+async function changePlayerStatus(playerId, matchId, selectElementId) {
+    const selectElement = document.getElementById(`statusSelect${selectElementId}`)
+
+    currentMatchId = matchId
+
+    await changePlayerStatusAjax(playerId, matchId, selectElement.value)
+    window.location.href = `?page=match&match-id=${currentMatchId}`
+}
+
+async function changePlayerStatusAjax(playerId, matchId, status) {
+    return new Promise((resolve) => {
+        $.ajax({
+            url: `?page=match&match-id=${currentMatchId}`,
+            type: "post",
+            dataType: 'text',
+            data: {
+                "change-status": true,
+                "status": status,
+                "player-id": playerId
+            },
+            success: function (result) {
+                resolve(result)
+            },
+
+        })
+    })
+}
+
 async function changePlayersDesiredNationAjax(playerId, matchId, nationName) {
-    // console.log(playerId, matchId, nationName)
     return new Promise((resolve) => {
          $.ajax({
             url: `?page=match&match-id=${currentMatchId}`,

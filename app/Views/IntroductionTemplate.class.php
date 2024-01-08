@@ -14,21 +14,7 @@ class IntroductionTemplate implements IView
 
     public function printOutput(array $tplData)
     {
-
-
-//        $logon = false;
-//
-//        if (isset($tplData["login-status"]) and $tplData["login-status"] == "Success") {
-//            $logon = true;
-//        }
-        $Header = new HeaderController();
         $HeaderView = new HeaderView();
-
-        $tplData = $Header->show($tplData["title"]);
-
-//        $Header->show($tplData["title"]);
-
-//        $tplHeaders->getHTMLHeader($tplData["title"], $logon);
 
         $HeaderView->printOutput($tplData);
 

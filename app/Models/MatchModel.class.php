@@ -209,6 +209,37 @@ class MatchModel implements \JsonSerializable
         $db->unbanPlayerFromMatch($playerId, $matchId);
     }
 
+    public static function getPlayersStatusFromMatch($playerId, $matchId)
+    {
+        $match = self::getMatchById($matchId);
+        $player = UserModel::getUserById($playerId);
+        if (!isset($match))
+            return null;
+
+        if (!isset($player))
+            return null;
+
+        if (!in_array($player, $match->getPlayers()))
+            return null;
+
+        $db = DatabaseModel::getDatabaseModel();
+        $data = $db->getPlayersStatusFromMatch($playerId, $matchId);
+
+        if (!isset($data)) {
+            return null;
+        }
+
+        $status = $data["status"];
+        return $status;
+    }
+
+    public static function setPlayerStatusFromMatch(int $playerId, int $matchId, string $status)
+    {
+        $db = DatabaseModel::getDatabaseModel();
+
+        $db->setPlayerStatusFromMatch($playerId, $matchId, $status);
+    }
+
     public function getDateCreated(): string
     {
         return $this->dateCreated;

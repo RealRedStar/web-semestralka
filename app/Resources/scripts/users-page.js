@@ -18,6 +18,32 @@ async function confirmCompletelyRemoveUser() {
     window.location.href = "?page=users"
 }
 
+async function changeUserRole(idUser, idSelectElement) {
+    selectedUserId = idUser
+    const selectEl = document.getElementById(`changeRoleSelect${idSelectElement}`)
+
+    await changeUserRoleAjax(selectedUserId, selectEl.value)
+    window.location.href = "?page=users"
+}
+
+async function changeUserRoleAjax(idUser, roleId) {
+    return new Promise((resolve) => {
+        $.ajax({
+            url: `?page=users`,
+            type: "post",
+            dataType: 'text',
+            data: {
+                "change-role": true,
+                "user-id": idUser,
+                "role-id": roleId
+            },
+            success: function (result) {
+                resolve(result)
+            }
+        })
+    })
+}
+
 async function confirmBanAjax() {
     return new Promise((resolve) => {
         $.ajax({

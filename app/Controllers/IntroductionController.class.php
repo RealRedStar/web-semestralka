@@ -9,17 +9,13 @@ use redstar\Models\DatabaseModel;
  */
 class IntroductionController implements IController
 {
-    private $db;
-
-    public function __construct()
-    {
-        $this->db = DatabaseModel::getDatabaseModel();
-    }
 
     public function show(string $pageTitle): array
     {
 
-        $tplData = [];
+        $header = new HeaderController();
+
+        $tplData = $header->show($pageTitle);
 
         $tplData["title"] = $pageTitle;
 

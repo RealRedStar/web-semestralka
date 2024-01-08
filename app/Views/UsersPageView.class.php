@@ -2,6 +2,8 @@
 
 namespace redstar\Views;
 
+use redstar\Models\RoleModel;
+
 class UsersPageView implements IView
 {
 
@@ -63,7 +65,31 @@ class UsersPageView implements IView
 
                 echo "<td>$username</td>";
                 echo "<td>$userFullName</td>";
-                echo "<td>$userRoleName</td>";
+                if ($loggedUserPermissions > $userPermissions and $loggedUserPermissions > 5) {
+                    ?>
+                        <td>
+                        <?php echo "<select id='changeRoleSelect$i' onchange='changeUserRole($userId, $i)'>"; ?>
+                            <?php
+                            foreach ($tplData["roles"] as $role) {
+                                $roleId = $role->getId();
+                                $roleName = $role->getName();
+                                $rolePermissions = $role->getPermissions();
+                                if ($loggedUserPermissions > $rolePermissions) {
+                                    if ($role->getName() == $userRoleName) {
+                                        echo "<option value='$roleId' selected>$roleName</option>";
+                                    } else {
+                                        echo "<option value='$roleId'>$roleName</option>";
+                                    }
+                                }
+                            }
+                            ?>
+                        </select>
+                        </td>
+
+                    <?php
+                } else {
+                    echo "<td>$userRoleName</td>";
+                }
 
                 echo "<td><div class='d-inline-flex gap-2'>";
                 if ($loggedUserPermissions > $userPermissions) {

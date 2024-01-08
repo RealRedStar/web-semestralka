@@ -2,6 +2,8 @@
 
 namespace redstar\Controllers;
 
+use http\Client\Curl\User;
+use redstar\Models\RoleModel;
 use redstar\Models\UserModel;
 
 class UsersPageController implements IController
@@ -33,12 +35,18 @@ class UsersPageController implements IController
             exit();
         }
 
+        if (isset($_POST["change-role"])) {
+            RoleModel::changeUserRole($_POST["user-id"], $_POST["role-id"]);
+            exit();
+        }
+
         if (isset($_POST["completely-remove-user"])) {
             UserModel::completelyRemoveUser($_POST["completely-remove-user"]);
             exit();
         }
 
         $tplData["users"] = UserModel::getAllUsers();
+        $tplData["roles"] = RoleModel::getAllRoles();
 
         return $tplData;
     }

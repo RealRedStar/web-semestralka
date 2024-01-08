@@ -2,8 +2,8 @@
 
 namespace redstar\Views;
 
+use redstar\Models\MatchModel;
 use redstar\Models\NationModel;
-use redstar\Models\UserModel;
 
 class MatchView implements IView
 {
@@ -13,6 +13,10 @@ class MatchView implements IView
     {
         $headerView = new HeaderView();
         $headerView->printOutput($tplData);
+
+        if (isset($tplData["success"])) {
+            echo "<div class='alert alert-success mx-5 mt-3'><strong>Úspěch! </strong>" . $tplData["success"] . "</div>";
+        }
 
         if (isset($tplData["error"])) {
             echo "<div class='alert alert-danger mx-5 mt-3'><strong>Chyba! </strong>". $tplData["error"] ."</div>";
@@ -24,6 +28,8 @@ class MatchView implements IView
             $loggedUser = $tplData["user"];
             $isInGame = $tplData["user-is-in-game"];
             $isOwner = $match->getOwner() == $loggedUser;
+            $dateFinished = $match->getDateFinished();
+            $isFinished = $dateFinished != "";
             $permissions = $loggedUser->getRole()->getPermissions();
             $isFull = sizeof($match->getPlayers()) == $match->getMaxPlayers();
 
@@ -39,7 +45,7 @@ class MatchView implements IView
             <div class="d-flex justify-content-center">
                 <div id="match-div" class="card card-text text-white bg-dark mb-3 mx-5 my-5 border col-lg-8 col-12">
                     <div class="card-header d-inline-flex align-items-center">
-                        <img class="border" src="<?php echo $imageUrl?>" alt="Logo of the match" height="64" width="64">
+                        <img class="border" src="<?php echo htmlspecialchars($imageUrl)?>" alt="Logo of the match" height="64" width="64">
                         <h1 class="ms-3"><?php echo $match->getName()?></h1>
                     </div>
                     <div class="card-body">
@@ -50,26 +56,35 @@ class MatchView implements IView
                             <b>Tvůrce kampaně: </b><?php echo htmlspecialchars($match->getOwner()->getUsername())?>
                         </p>
                         <p class="card-text" id="date-created">
-                            <b>Datum vytvoření (Y-M-D): </b><?php echo $match->getDateCreated() ?>
+                            <b>Datum vytvoření (Y-M-D): </b><?php echo htmlspecialchars($match->getDateCreated()) ?>
                         </p>
                         <p class="card-text" id="date-starting">
-                            <b>Datum zahájení kampaně (Y-M-D): </b><?php echo $match->getDateStarting() ?>
+                            <b>Datum zahájení kampaně (Y-M-D): </b><?php echo htmlspecialchars($match->getDateStarting()) ?>
                         </p>
+                        <?php
+                            if ($isFinished) {
+                                ?>
+                                <p class="card-text" id="date-starting">
+                                    <b>Datum ukončení kampaně (Y-M-D): </b><?php echo htmlspecialchars($dateFinished) ?>
+                                </p>
+                        <?php
+                            }
+                        ?>
                         <p class="card-text" id="players">
-                            <b>Počet hráčů: </b><?php echo sizeof($match->getPlayers()) . "/" . $match->getMaxPlayers() ?>
+                            <b>Počet hráčů: </b><?php echo sizeof($match->getPlayers()) . "/" . htmlspecialchars($match->getMaxPlayers()) ?>
                         </p>
                         <h4>
                             Připojení hráči:
                         </h4>
                         <div class="overflow-x-auto">
-                        <table class="table border">
-                            <thead class="table-primary">
+                        <table class="table table-striped table-dark table-bordered">
+                            <thead>
                             <tr>
-                                <th scope="col">ID hráče</th>
-                                <th scope="col">Uživatelské jméno</th>
-                                <th scope="col">Preferovaná zem</th>
-                                <th scope="col">Umístění</th>
-                                <?php if ($isOwner or $permissions > 1) { echo '<th scope="col">Akce</th>'; } ?>
+                                <th class="bg-primary" scope="col">ID hráče</th>
+                                <th class="bg-primary" scope="col">Uživatelské jméno</th>
+                                <th class="bg-primary" scope="col">Preferovaná zem</th>
+                                <th class="bg-primary" scope="col">Umístění</th>
+                                <?php if (($isOwner or $permissions > 1) and !$isFinished) { echo '<th class="bg-primary" scope="col">Akce</th>'; } ?>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,9 +96,10 @@ class MatchView implements IView
                                 $playerIsOwnerInTheGame = $loggedUser->getId() == $playerId;
                                 $playerIsLoggedUser = $loggedUser->getId() == $playerId;
                                 $playersNation = NationModel::getPlayersNationFromMatch($playerId, $matchId);
+                                $playersStatus = MatchModel::getPlayersStatusFromMatch($playerId, $matchId) ?? "žádné";
                                 $playersNation = $playersNation ?? NationModel::getDefaultNation();
-                                $playersNationName = $playersNation->getName();
-                                if ($isOwner or $permissions > 1) {
+                                $playersNationName = htmlspecialchars($playersNation->getName());
+                                if (($isOwner or $permissions > 1) and !$isFinished) {
                                     echo
                                     "<tr class='table-active'>
                                         <th scope='row'>$playerId</th>
@@ -101,15 +117,22 @@ class MatchView implements IView
                                     echo "<option value='$playersNationName' selected>$playersNationName</option>";
                                     echo "
                                             </select>
+                                        </td>"; ?>
+                                        <td>
+                                            <?php echo "<select id='statusSelect$i' onchange='changePlayerStatus($playerId, $matchId, $i)'>" ?>
+                                                <option value='vítězství' <?php if (($playersStatus) == 'vítězství') echo "selected"; ?>>vítězství</option>
+                                                <option value='prohra' <?php if (($playersStatus) == 'prohra') echo "selected"; ?>>prohra</option>
+                                                <option value='žádné' <?php if (($playersStatus) == 'žádné') echo "selected"; ?>>žádné</option>
+                                            </select>
                                         </td>
-                                        <td>Column content</td>";
+                            <?php
                                         if (!$playerIsOwnerInTheGame)
                                             echo "<td><button name='ban-btn' value='$playerId' class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#banModal' onclick='targetPlayer($playerId, $matchId)'>Vyhodit</button></td>";
                                         else
                                             echo "<td></td>";
                                     echo "</tr>";
                                 } else {
-                                    if ($playerIsLoggedUser) {
+                                    if ($playerIsLoggedUser and !$isFinished) {
                                         echo
                                         "<tr class='table-active'>
                                             <th scope='row'>$playerId</th>
@@ -126,16 +149,16 @@ class MatchView implements IView
                                         echo "<option value='$playersNationName' selected>$playersNationName</option>";
                                         echo "
                                                 </select>
-                                            </td>
-                                            <td>Column content</td>
-                                        </tr>";
+                                            </td>";
+                                        echo "<td>$playersStatus</td>";
+                                        echo "</tr>";
                                     } else {
                                         echo
                                         "<tr class='table-active'>
                                             <th scope='row'>$playerId</th>
                                             <td>$playerName</td>
                                             <td>$playersNationName</td>
-                                            <td>Column content</td>
+                                            <td>$playersStatus</td>
                                         </tr>";
                                     }
                                 }
@@ -153,12 +176,12 @@ class MatchView implements IView
                                     Vyhození hráči:
                                 </h4>
                                 <div class="overflow-x-auto">
-                                <table class="table border">
-                                    <thead class="table-primary">
+                                <table class="table table-striped table-dark table-bordered">
+                                    <thead>
                                     <tr>
-                                        <th scope="col">ID hráče</th>
-                                        <th scope="col">Uživatelské jméno</th>
-                                        <th scope="col">Akce</th>
+                                        <th class="bg-primary" scope="col">ID hráče</th>
+                                        <th class="bg-primary" scope="col">Uživatelské jméno</th>
+                                        <?php if (!$isFinished) { echo "<th class='bg-primary' scope='col'>Akce</th>"; } ?>
                                     </tr>
                                     </thead>
                                     <tbody> <?php
@@ -170,10 +193,11 @@ class MatchView implements IView
                                         echo "
                                             <tr class='table-active'>
                                                 <th scope='row'>$playerId</th>
-                                                <td>$playerName</td>
-                                                <td><button name='ban-btn' value='$playerId' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#unbanModal' onclick='targetPlayer($playerId, $matchId)'>Odbanovat</button></td>
-                                            </tr>
-                                        ";
+                                                <td>$playerName</td>";
+                                        if (!$isFinished) {
+                                            echo "<td><button name='ban-btn' value='$playerId' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#unbanModal' onclick='targetPlayer($playerId, $matchId)'>Odbanovat</button></td>";
+                                        }
+                                        echo "</tr>";
                                     }
                                     ?>
                                     </tbody>
@@ -184,23 +208,25 @@ class MatchView implements IView
                         <div class="d-inline-flex gap-3" id="buttons">
                             <?php
                             $loggedUserId = $loggedUser->getId();
-                            if (!$isInGame) {
-                                if (!$isFull) {
-                                    echo "
+                            if (!$isFinished) {
+                                if (!$isInGame) {
+                                    if (!$isFull) {
+                                        echo "
                                     <form method='post' action='?page=match&match-id=$matchId'>
                                         <button type='submit' name='join-btn' value='$loggedUserId' class='btn btn-primary'>Připojit se</button>
                                     </form>";
-                                }
-                            } else {
-                                echo "
+                                    }
+                                } else {
+                                    echo "
                                     <form method='post' action='?page=match&match-id=$matchId'>
                                         <button type='submit' name='leave-btn' value='$loggedUserId' class='btn btn-danger'>Odpojit se</button>
                                     </form>";
+                                }
                             }
 
                             if ($permissions > 1 or $isOwner) {
                                 echo "
-                                    <button class='btn btn-danger'>Smazat kampaň</button>
+                                    <button type='button' name='remove-match-btn' value='$matchId' data-bs-toggle='modal' data-bs-target='#removeMatchModal' class='btn btn-danger'>Smazat kampaň</button>
                                 ";
                             }
                             ?>
@@ -243,6 +269,26 @@ class MatchView implements IView
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="removeMatchModal" tabindex="-1" role="dialog" aria-labelledby="removeMatchModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Potvrzení akce</h5>
+                        </div>
+                        <div class="modal-body">
+                            Opravdu si přejete tuto kampaň odstranit?
+                        </div>
+                        <div class="modal-footer">
+                            <form method="post" action="?page=match">
+                                <button type="submit" name="remove-match-btn" value="<?php echo $matchId ?>" class="btn btn-danger">Odstranit</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
 <!--            <div id="match" class="card text-white bg-dark mb-3 mx-5 my-5 border">-->
 <!--                <div class="card-header d-inline-flex align-items-center">-->
