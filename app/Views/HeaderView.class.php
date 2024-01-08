@@ -54,6 +54,15 @@ class HeaderView implements IView
             <li class="nav-item">
                 <a class="nav-link <?php echo $pageTitle == 'Seznam turnajů' ? 'active' : '';?>" href="?page=matches">Seznam turnajů</a>
             </li>
+            <?php
+                if (isset($user) and $tplData["user"]->getRole()->getPermissions() > 1) {
+            ?>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $pageTitle == 'Správa uživatelů' ? 'active' : '';?>" href="?page=users">Správa uživatelů</a>
+            </li>
+            <?php
+                }
+            ?>
         </ul>
         <ul class="navbar-nav">
 
@@ -134,6 +143,12 @@ class HeaderView implements IView
                 <div class="alert alert-dismissible alert-danger mx-5 mt-3">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     <strong>Chyba!</strong> Zadali jste špatné uživatelské jméno a nebo heslo
+                </div>';
+            } elseif ($tplData["login-status"] == "Banned") {
+                echo '
+                <div class="alert alert-dismissible alert-danger mx-5 mt-3">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>Chyba!</strong> Váš účet byl zabanován. Pokud si myslíte, že se jedná o omyl, pošlete zprávu na podporu Hearts of Competition.
                 </div>';
             } elseif ($tplData["login-status"] == "Logout") {
                 echo '

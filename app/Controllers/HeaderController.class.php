@@ -33,14 +33,24 @@ class HeaderController implements IController
             } elseif (!$this->checkCredentials($_POST["username"], $_POST["password"])) {
                 $tplData["login-status"] = "Fail";
             } else {
-                $tplData["login-status"] = "Success";
-                $_SESSION["user"] = UserModel::getUserByUsername($_POST["username"]);
+                $user = UserModel::getUserByUsername($_POST["username"]);
+                if ($user->isBanned()) {
+                    $tplData["login-status"] = "Banned";
+                } else {
+                    $tplData["login-status"] = "Success";
+                    $_SESSION["user"] = UserModel::getUserByUsername($_POST["username"]);
+                }
             }
         }
 
         if (isset($_SESSION["user"])) {
-//            $tplData["logon"] = true;
-            $tplData["user"] = $_SESSION["user"];
+            if ($_SESSION["user"]->isBanned()) {
+                $tplData["user"] = null;
+                $tplData["login-status"] = "Banned";
+                session_unset();
+            } else {
+                $tplData["user"] = $_SESSION["user"];
+            }
         } else {
             $tplData["user"] = null;
         }

@@ -52,6 +52,13 @@ const WEB_PAGES = array(
         "controller_class_name" => \redstar\Controllers\AuthPageController::class,
 
         "view_class_name" => \redstar\Views\AuthPageView::class
+    ),
+    "users" => array(
+        "title" => "Správa uživatelů",
+
+        "controller_class_name" => \redstar\Controllers\UsersPageController::class,
+
+        "view_class_name" => \redstar\Views\UsersPageView::class
     )
 );
 

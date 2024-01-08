@@ -3,6 +3,7 @@
 namespace redstar\Views;
 
 use redstar\Controllers\HeaderController;
+use Twig\Environment;
 
 /**
  * Šablona pro zobrazení úvodní stránky

@@ -181,7 +181,7 @@ class MatchView implements IView
                                 </div>
                         <?php
                             } ?>
-                        <div id="buttons">
+                        <div class="d-inline-flex gap-3" id="buttons">
                             <?php
                             $loggedUserId = $loggedUser->getId();
                             if (!$isInGame) {
@@ -196,6 +196,12 @@ class MatchView implements IView
                                     <form method='post' action='?page=match&match-id=$matchId'>
                                         <button type='submit' name='leave-btn' value='$loggedUserId' class='btn btn-danger'>Odpojit se</button>
                                     </form>";
+                            }
+
+                            if ($permissions > 1 or $isOwner) {
+                                echo "
+                                    <button class='btn btn-danger'>Smazat kampaň</button>
+                                ";
                             }
                             ?>
                         </div>

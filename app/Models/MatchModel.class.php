@@ -97,7 +97,7 @@ class MatchModel implements \JsonSerializable
         $matches = array();
 
         if (!isset($data)) {
-            return null;
+            return array();
         } else {
             for ($i = 0; $i < sizeof($data); $i++) {
                 $id = $data[$i]["id_match"];
@@ -170,6 +170,26 @@ class MatchModel implements \JsonSerializable
 
         $db = DatabaseModel::getDatabaseModel();
         $db->removePlayerFromMatch($playerId, $matchId);
+    }
+
+    public static function removeMatch(int $matchId) {
+        $db = DatabaseModel::getDatabaseModel();
+
+        $match = self::getMatchById($matchId);
+
+        if (!isset($match)) {
+            return;
+        }
+
+        foreach ($match->getPlayers() as $player) {
+            $db->removePlayerFromMatch($player->getId(), $match->getId());
+        }
+
+        foreach ($match->getBannedPlayers() as $player) {
+            $db->unbanPlayerFromMatch($player->getId(), $match->getId());
+        }
+
+        $db->removeMatchFromDatabase($matchId);
     }
 
     public static function unbanPlayerFromMatch(int $playerId, int $matchId)

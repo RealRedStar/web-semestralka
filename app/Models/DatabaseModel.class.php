@@ -264,4 +264,45 @@ class DatabaseModel
 
         return $stmt->execute();
     }
+
+    public function getAllUsers()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function banUserById(int $id): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE users SET is_banned = 1 WHERE id_user = :id_user");
+
+        $stmt->bindValue(":id_user", $id);
+
+        return $stmt->execute();
+    }
+
+    public function unbanUserById(int $id): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE users SET is_banned = 0 WHERE id_user = :id_user");
+
+        $stmt->bindValue(":id_user", $id);
+
+        return $stmt->execute();
+    }
+
+    public function removeMatchFromDatabase(int $matchId): bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM matches WHERE id_match = :id_match");
+        $stmt->bindValue(":id_match", $matchId);
+
+        return $stmt->execute();
+    }
+
+    public function removeUserFromDatabase(int $userId): bool
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id_user = :id_user");
+        $stmt->bindValue(":id_user", $userId);
+
+        return $stmt->execute();
+    }
 }

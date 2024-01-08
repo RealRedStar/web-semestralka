@@ -77,6 +77,4 @@ async function changePlayersDesiredNationAjax(playerId, matchId, nationName) {
 async function targetPlayer(id, matchId) {
     selectedPlayerId = id
     currentMatchId = matchId
-    console.log(selectedPlayerId)
-    console.log(currentMatchId)
 }
