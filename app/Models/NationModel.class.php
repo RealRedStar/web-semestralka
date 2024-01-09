@@ -2,16 +2,23 @@
 
 namespace redstar\Models;
 
+/**
+ * Třída NationModel reprezentuje národ
+ * Obsahuje statické metody pro manipulaci s nimi
+ */
 class NationModel implements \JsonSerializable
 {
+    /** @var string TAG země */
     private string $tag;
+    /** @var string název země */
     private string $name;
+    /** @var string název obrázku země */
     private string $imageName;
 
     /**
-     * @param string $tag
-     * @param string $name
-     * @param string $imageName
+     * @param string $tag TAG země
+     * @param string $name název země
+     * @param string $imageName název obrázku země
      */
     public function __construct(string $tag, string $name, string $imageName)
     {
@@ -20,6 +27,11 @@ class NationModel implements \JsonSerializable
         $this->imageName = $imageName;
     }
 
+    /**
+     * Vrátí národ podle TAGu
+     * @param string $tag TAG národa
+     * @return NationModel|null Pokud národ existuje, vrátí ho, jinak vrací null
+     */
     public static function getNationByTag(string $tag): ?NationModel {
         $db = DatabaseModel::getDatabaseModel();
 
@@ -36,6 +48,11 @@ class NationModel implements \JsonSerializable
         return new NationModel($nationTag, $name, $imageName);
     }
 
+    /**
+     * Vrátí národ podle názvu
+     * @param string $name název národa
+     * @return NationModel|null Pokud národ existuje, vrátí ho, jinak vrací null
+     */
     public static function getNationByName(string $name): ?NationModel {
 
         $db = DatabaseModel::getDatabaseModel();
@@ -53,6 +70,12 @@ class NationModel implements \JsonSerializable
         return new NationModel($nationTag, $name, $imageName);
     }
 
+    /**
+     * Vrátí vybraný národ hráče z kampaně
+     * @param int $playerId ID hŕače
+     * @param int $matchId ID kampaně
+     * @return NationModel|null Pokud národ existuje, vrátí ho, jinak vrací null
+     */
     public static function getPlayersNationFromMatch(int $playerId, int $matchId): ?NationModel {
         $db = DatabaseModel::getDatabaseModel();
 
@@ -68,6 +91,11 @@ class NationModel implements \JsonSerializable
         return $nation;
     }
 
+    /**
+     * Vrátí již okupované národy z kampaně
+     * @param int $matchId ID kampaně
+     * @return array pole již okupovaných národů
+     */
     public static function getOccupiedNationsFromMatch(int $matchId): array
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -84,6 +112,11 @@ class NationModel implements \JsonSerializable
         return $nations;
     }
 
+    /**
+     * Vrátí volné národy z kampaně
+     * @param int $matchId ID kampaně
+     * @return array pole volných národů
+     */
     public static function getAvailableNationsFromMatch(int $matchId): array
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -105,12 +138,20 @@ class NationModel implements \JsonSerializable
         return $availableNations;
     }
 
-    public static function getDefaultNation(): ?NationModel
+    /**
+     * Vrátí výchozí národ
+     * @return NationModel výchozí národ
+     */
+    public static function getDefaultNation(): NationModel
     {
         $nation = self::getNationByTag("OTH");
         return $nation;
     }
 
+    /**
+     * Vrátí všechny národy
+     * @return array pole všech národů
+     */
     public static function getAllNations(): array {
         $db = DatabaseModel::getDatabaseModel();
 
@@ -128,6 +169,14 @@ class NationModel implements \JsonSerializable
 
         return $nations;
     }
+
+    /**
+     * Změní vybraný národ hráče dané kampaně
+     * @param int $playerId ID hráče
+     * @param int $matchId ID kampaně
+     * @param string $nationName název národa
+     * @return void
+     */
     public static function changePlayersNationFromMatch(int $playerId, int $matchId, string $nationName) {
         $db = DatabaseModel::getDatabaseModel();
 
@@ -140,23 +189,35 @@ class NationModel implements \JsonSerializable
         $db->changePlayersNationFromMatch($playerId, $matchId, $nation->getTag());
     }
 
+    /**
+     * @return string tag národa
+     */
     public function getTag(): string
     {
         return $this->tag;
     }
 
+    /**
+     * @return string název národa
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return string název obrázku národa
+     */
     public function getImageName(): string
     {
         return $this->imageName;
     }
 
-
-    public function jsonSerialize(): mixed
+    /**
+     * Převede model na řetězec json ve formě asociativního pole
+     * @return array - json asociativní pole národa
+     */
+    public function jsonSerialize(): array
     {
         return [
           "tag" => $this->tag,

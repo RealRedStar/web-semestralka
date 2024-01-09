@@ -103,7 +103,6 @@ class AuthPageController implements IController
         $data["email"] = $_POST["email"];
         $data["first-name"] = $_POST["first-name"] ?? "";
         $data["last-name"] = $_POST["last-name"] ?? "";
-        $data["image-name"] = $_POST["image-name"] ?? "";
         $data["role"] = $_POST["role"] ?? 4;
 
         $db = DatabaseModel::getDatabaseModel();

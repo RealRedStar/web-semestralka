@@ -3,13 +3,12 @@
 namespace redstar\Views;
 
 use redstar\Controllers\HeaderController;
-use Twig\Environment;
 
 /**
  * Šablona pro zobrazení úvodní stránky
  * @package redstar\Views
  */
-class IntroductionTemplate implements IView
+class IntroductionView implements IView
 {
 
     public function printOutput(array $tplData)
@@ -28,7 +27,7 @@ class IntroductionTemplate implements IView
 </div>
 <div class="d-flex mt-3 justify-content-center gap-3">
     <?php if (isset($tplData["user"])) {
-        echo '<a href="?page=match&match=new&edit=true" class="btn btn-primary">Vytvořit novou kampaň</a>';
+        echo '<a href="?page=match&match-id=new" class="btn btn-primary">Vytvořit novou kampaň</a>';
     } else {
         echo '<a href="?page=auth&part=registration" class="btn btn-primary">Zaregistrovat se</a>';
     } ?>

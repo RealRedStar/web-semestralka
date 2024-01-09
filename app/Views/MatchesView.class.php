@@ -2,7 +2,7 @@
 
 namespace redstar\Views;
 
-class MatchesTemplate implements IView
+class MatchesView implements IView
 {
 
     public function printOutput(array $tplData)

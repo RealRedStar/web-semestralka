@@ -2,8 +2,6 @@
 
 namespace redstar\Controllers;
 
-use redstar\Models\DatabaseModel;
-
 /**
  * Ovladač zajišťující vypsání úvodní stránky
  */

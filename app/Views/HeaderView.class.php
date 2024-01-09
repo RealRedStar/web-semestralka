@@ -70,8 +70,8 @@ class HeaderView implements IView
 
         if (isset($user)) {
             ?>
-            <li class="nav-item dropdown">
-                <a class="nav-link " href="user-account/<?php echo htmlspecialchars($user->getUsername()); ?>"> <?php echo htmlspecialchars($user->getUsername()); ?></a>
+            <li class="nav-item">
+                <a class="nav-link"><?php echo htmlspecialchars($user->getUsername()); ?></a>
             </li>
             <li>
                 <form method="post">
@@ -115,8 +115,6 @@ class HeaderView implements IView
                             <button type="submit" name="login-btn" value="login" class="btn btn-primary">Přihlásit</button>
                         </div>
                     </form>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item btn-violet" href="#">Zapomenuté heslo</a>
                 </div>
             </li>
             <li class="nav-item">

@@ -2,8 +2,6 @@
 
 namespace redstar\Views;
 
-use redstar\Models\RoleModel;
-
 class UsersPageView implements IView
 {
 

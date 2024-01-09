@@ -1,14 +1,14 @@
 <?php
 //////////////////////////////////////////////////////////////////
-/////////////////  Globalni nastaveni aplikace ///////////////////
+/////////////////  Globální nastavení aplikace ///////////////////
 //////////////////////////////////////////////////////////////////
 
-//// Pripojeni k databazi ////
+//// Připojení k databázi ////
 
 /** Adresa serveru. */
-define("DB_SERVER","localhost"); // https://students.kiv.zcu.cz lze 147.228.63.10, ale musite byt na VPN
+define("DB_SERVER","localhost");
 /** Nazev databaze. */
-define("DB_NAME","mydb");
+define("DB_NAME","testing");
 /** Uzivatel databaze. */
 define("DB_USER","root");
 /** Heslo uzivatele databaze */
@@ -19,28 +19,32 @@ const DEFAULT_WEB_PAGE_KEY = "home";
 
 /** Dostupne webove stranky. */
 const WEB_PAGES = array(
-    //// Uvodni stranka ////
+    //// Úvodní stránka ////
     "home" => array(
+        //// titulek
         "title" => "Úvodní stránka",
 
-        //// kontroler
-        //"file_name" => "IntroductionController.class.php",
+        //// controller
         "controller_class_name" => \redstar\Controllers\IntroductionController::class, // poskytne nazev tridy vcetne namespace
 
-        // ClassBased sablona
-        "view_class_name" => \redstar\Views\IntroductionTemplate::class,
+        //// ClassBased šablona
+        "view_class_name" => \redstar\Views\IntroductionView::class,
     ),
     //// KONEC: Uvodni stranka ////
+    //// Seznam kampaní ////
     "matches" => array(
-        "title" => "Seznam turnajů",
+        //// titulek
+        "title" => "Seznam kampaní",
 
         //// kontroler
         "controller_class_name" => \redstar\Controllers\MatchesController::class,
 
-        // ClassBased šablona
-        "view_class_name" => \redstar\Views\MatchesTemplate::class
+        //// ClassBased šablona
+        "view_class_name" => \redstar\Views\MatchesView::class
     ),
+    //// KONEC: Seznam kampaní ////
     "match" => array(
+        ///
         "title" => "Kampaň",
 
         "controller_class_name" => \redstar\Controllers\MatchController::class,

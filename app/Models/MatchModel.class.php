@@ -2,34 +2,55 @@
 
 namespace redstar\Models;
 
+/**
+ * Třída MatchModel reprezentuje kampaň
+ * Obsahuje statické metody pro manipulaci s kampani
+ */
 class MatchModel implements \JsonSerializable
 {
+    /** @var int Id kampaně */
     private int $id;
+    /** @var UserModel majitel kampaně  */
     private UserModel $owner;
+    /** @var string název kampaně */
     private string $name;
+    /** @var string popis kampaně */
     private string $description;
+    /** @var int maximální počet hráčů */
     private int $maxPlayers;
+    /** @var string datum vytvoření kampaně */
     private string $dateCreated;
+    /** @var string datum zahájení kampaně */
     private string $dateStarting;
+    /** @var string datum ukončení kampaně */
     private string $dateFinished;
+    /** @var string kód pro připojení do hry */
+    private string $joinCode;
+    /** @var string heslo pro připojení do hry */
+    private string $joinPassword;
+    /** @var string název obrázku kampaně */
     private string $imageName;
+    /** @var array hráči kampaně */
     private array $players;
+    /** @var array vyhození hráči kampaně */
     private array $bannedPlayers;
 
     /**
-     * @param int $id
-     * @param UserModel $owner
-     * @param string $name
-     * @param string $description
-     * @param int $maxPlayers
-     * @param string $dateCreated
-     * @param string $dateStarting
-     * @param string $dateFinished
-     * @param string $imageName
-     * @param array $players
-     * @param array $bannedPlayers
+     * @param int $id - ID kampaně
+     * @param UserModel $owner - majitel
+     * @param string $name - název
+     * @param string $description - popis
+     * @param int $maxPlayers - max. počet hráčů
+     * @param string $dateCreated - datum vytvoření
+     * @param string $dateStarting - datum zahájení
+     * @param string $dateFinished - datum ukončení
+     * @param string $joinCode - kód pro připojení
+     * @param string $joinPassword - heslo pro připojení
+     * @param string $imageName - název obrázku
+     * @param array $players - hráči
+     * @param array $bannedPlayers - vyhození hráči
      */
-    public function __construct(int $id, UserModel $owner, string $name, string $description, int $maxPlayers, string $dateCreated, string $dateStarting, string $dateFinished, string $imageName, array $players, array $bannedPlayers)
+    public function __construct(int $id, UserModel $owner, string $name, string $description, int $maxPlayers, string $dateCreated, string $dateStarting, string $dateFinished, string $joinCode, string $joinPassword, string $imageName, array $players, array $bannedPlayers)
     {
         $this->id = $id;
         $this->owner = $owner;
@@ -39,11 +60,18 @@ class MatchModel implements \JsonSerializable
         $this->dateCreated = $dateCreated;
         $this->dateStarting = $dateStarting;
         $this->dateFinished = $dateFinished;
+        $this->joinCode = $joinCode;
+        $this->joinPassword = $joinPassword;
         $this->imageName = $imageName;
         $this->players = $players;
         $this->bannedPlayers = $bannedPlayers;
     }
 
+    /**
+     * Vrátí kampaň dle ID, pokud existuje
+     * @param int $id - ID kampaně
+     * @return MatchModel|null - kampaň, pokud existuje
+     */
     public static function getMatchById(int $id): ?MatchModel {
         $db = DatabaseModel::getDatabaseModel();
         $purifier = \HTMLPurifier::getInstance();
@@ -71,17 +99,21 @@ class MatchModel implements \JsonSerializable
             $description = $purifier->purify($data["description"], config: $CKETagsAllowed);
             $dateCreated = $data["date_created"];
             $dateStarting = $data["date_starting"];
-            $dateFinished = "";
-            if (isset($data["date_finished"])) {
-                $dateFinished = $data["date_finished"];
-            }
+            $dateFinished = $data["date_finished"] ?? "";
+            $joinCode = $data["join_code"] ?? "";
+            $joinPassword = $data["join_password"] ?? "";
             $imageName = $data["image_name"] ?? "";
 
-            return new MatchModel($id, $ownerId, $name, $description, $maxPlayers, $dateCreated, $dateStarting, $dateFinished, $imageName, $players, $bannedPlayers);
+            return new MatchModel($id, $ownerId, $name, $description, $maxPlayers, $dateCreated, $dateStarting, $dateFinished, $joinCode, $joinPassword, $imageName, $players, $bannedPlayers);
         }
 
     }
-    public static function getAllMatches(): ?array {
+
+    /**
+     * Vrátí pole všech kampaní
+     * @return array pole všech kampaní
+     */
+    public static function getAllMatches(): array {
         $db = DatabaseModel::getDatabaseModel();
         $purifier = \HTMLPurifier::getInstance();
 
@@ -107,20 +139,24 @@ class MatchModel implements \JsonSerializable
                 $description = $purifier->purify($data[$i]["description"], config: $CKETagsAllowed);
                 $dateCreated = $data[$i]["date_created"];
                 $dateStarting = $data[$i]["date_starting"];
-                $dateFinished = "";
-                if (isset($data[$i]["date_finished"])) {
-                    $dateFinished = $data[$i]["date_finished"];
-                }
+                $dateFinished = $data[$i]["date_finished"] ?? "";
+                $joinCode = $data[$i]["join_code"] ?? "";
+                $joinPassword = $data[$i]["join_password"] ?? "";
                 $imageName = $data[$i]["image_name"] ?? "";
                 $players = UserModel::getPlayersFromMatchId($id);
                 $bannedPlayers = UserModel::getBannedPlayersFromMatchId($id);
 
-                $matches[$i] = new MatchModel($id, $ownerId, $name, $description, $maxPlayers, $dateCreated, $dateStarting, $dateFinished, $imageName, $players, $bannedPlayers);
+                $matches[$i] = new MatchModel($id, $ownerId, $name, $description, $maxPlayers, $dateCreated, $dateStarting, $dateFinished, $joinCode, $joinPassword, $imageName, $players, $bannedPlayers);
             }
             return $matches;
         }
     }
 
+    /**
+     * Přidá hráče do kampaně
+     * @param int $playerId - ID hráče
+     * @param int $matchId - ID kampaně
+     */
     public static function addPlayerToMatch(int $playerId, int $matchId) {
         $match = self::getMatchById($matchId);
         $player = UserModel::getUserById($playerId);
@@ -137,6 +173,11 @@ class MatchModel implements \JsonSerializable
         $db->addPlayerToMatch($playerId, $matchId);
     }
 
+    /**
+     * Vyhodí hráče z kampaně
+     * @param int $playerId - ID hráče
+     * @param int $matchId - ID kampaně
+     */
     public static function banPlayerFromMatch(int $playerId, int $matchId)
     {
         $match = self::getMatchById($matchId);
@@ -155,6 +196,11 @@ class MatchModel implements \JsonSerializable
         $db->banPlayerFromMatch($playerId, $matchId);
     }
 
+    /**
+     * Odebere hráče z kampaně
+     * @param int $playerId - ID hráče
+     * @param int $matchId - ID kampaně
+     */
     public static function removePlayerFromMatch(int $playerId, int $matchId)
     {
         $match = self::getMatchById($matchId);
@@ -172,6 +218,10 @@ class MatchModel implements \JsonSerializable
         $db->removePlayerFromMatch($playerId, $matchId);
     }
 
+    /**
+     * Kompletně smaže kampaň
+     * @param int $matchId - ID kampaně
+     */
     public static function removeMatch(int $matchId) {
         $db = DatabaseModel::getDatabaseModel();
 
@@ -181,17 +231,24 @@ class MatchModel implements \JsonSerializable
             return;
         }
 
+        // smažeme připojené hráče z kampaně
         foreach ($match->getPlayers() as $player) {
             $db->removePlayerFromMatch($player->getId(), $match->getId());
         }
-
+        // smažeme vyhozené hráče z kampaně
         foreach ($match->getBannedPlayers() as $player) {
             $db->unbanPlayerFromMatch($player->getId(), $match->getId());
         }
 
+        // smažeme kampaň z databáze
         $db->removeMatchFromDatabase($matchId);
     }
 
+    /**
+     * Povolí hráči přistupovat ke kampani
+     * @param int $playerId - ID hráče
+     * @param int $matchId - ID kampaně
+     */
     public static function unbanPlayerFromMatch(int $playerId, int $matchId)
     {
         $match = self::getMatchById($matchId);
@@ -209,6 +266,12 @@ class MatchModel implements \JsonSerializable
         $db->unbanPlayerFromMatch($playerId, $matchId);
     }
 
+    /**
+     * Vrátí umístění hráče
+     * @param $playerId - ID hráče
+     * @param $matchId - ID kampaně
+     * @return mixed - řetězec umístění, pokud uživatel má umístění, jinak null
+     */
     public static function getPlayersStatusFromMatch($playerId, $matchId)
     {
         $match = self::getMatchById($matchId);
@@ -233,6 +296,12 @@ class MatchModel implements \JsonSerializable
         return $status;
     }
 
+    /**
+     * Nastaví uživateli umístění
+     * @param int $playerId - ID uživatele
+     * @param int $matchId - ID kampaně
+     * @param string $status - umístění
+     */
     public static function setPlayerStatusFromMatch(int $playerId, int $matchId, string $status)
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -240,47 +309,32 @@ class MatchModel implements \JsonSerializable
         $db->setPlayerStatusFromMatch($playerId, $matchId, $status);
     }
 
-    public function getDateCreated(): string
+    public static function changeJoiningCredentials(int $matchId, string $joinCode, string $joinPassword)
     {
-        return $this->dateCreated;
+        $db = DatabaseModel::getDatabaseModel();
+
+        $db->changeMatchJoiningCredentials($matchId, $joinCode, $joinPassword);
     }
 
-    public function getDateFinished(): string
+    public static function setMatchFinishDate(int $matchId, string $dateTime)
     {
-        return $this->dateFinished;
+        $db = DatabaseModel::getDatabaseModel();
+
+        $db->setMatchFinishDate($matchId, $dateTime);
     }
 
-    public function getId(): int
+    public static function saveNewMatch(string $name, string $description, int $ownerId, int $maxPlayers, string $dateCreated, string $dateStarting, string $imageName): bool
     {
-        return $this->id;
+        $db = DatabaseModel::getDatabaseModel();
+
+        return $db->createNewMatch($name, $description, $ownerId, $maxPlayers, $dateCreated, $dateStarting, $imageName);
     }
 
-    public function getOwner(): UserModel
-    {
-        return $this->owner;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getMaxPlayers(): int
-    {
-        return $this->maxPlayers;
-    }
-
-    public function getImageName(): string
-    {
-        return $this->imageName;
-    }
-
-    public function jsonSerialize(): mixed
+    /**
+     * Převede model na řetězec json ve formě asociativního pole
+     * @return array - json asociativní pole aktuální kampaně
+     */
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
@@ -291,35 +345,118 @@ class MatchModel implements \JsonSerializable
             'dateCreated' => $this->dateCreated,
             'dateStarting' => $this->dateStarting,
             'dateFinished' => $this->dateFinished,
+            'joinCode' => $this->joinCode,
+            'joinPassword' => $this->joinPassword,
             'imageName' => $this->imageName,
             'players' => $this->players,
             'bannedPlayers' => $this->bannedPlayers
         ];
     }
 
+    /**
+     * @return string - datum vytvoření
+     */
+    public function getDateCreated(): string
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @return string - datum ukončení
+     */
+    public function getDateFinished(): string
+    {
+        return $this->dateFinished;
+    }
+
+    /**
+     * @return int - ID kampaně
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return UserModel - majitele kampaně
+     */
+    public function getOwner(): UserModel
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @return string - název kampaně
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string popis kampaně
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return int maximální počet hráčů
+     */
+    public function getMaxPlayers(): int
+    {
+        return $this->maxPlayers;
+    }
+
+    /**
+     * @return string název obrázku
+     */
+    public function getImageName(): string
+    {
+        return $this->imageName;
+    }
+
+    /**
+     * @return string datum zahájení kampaně
+     */
     public function getDateStarting(): string
     {
         return $this->dateStarting;
     }
 
+    /**
+     * @return array pole hráčů
+     */
     public function getPlayers(): array
     {
         return $this->players;
     }
 
+    /**
+     * @return array pole vyhozených hráčů
+     */
     public function getBannedPlayers(): array
     {
         return $this->bannedPlayers;
     }
 
-    public function setName(string $name)
+    /**
+     * @return string kód pro připojení
+     */
+    public function getJoinCode(): string
     {
-        $this->name = $name;
+        return $this->joinCode;
     }
 
-    public function setDescription(string $description)
+    /**
+     * @return string heslo pro připojení
+     */
+    public function getJoinPassword(): string
     {
-        $this->description = $description;
+        return $this->joinPassword;
     }
+
+
 
 }

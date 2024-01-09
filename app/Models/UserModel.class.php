@@ -10,7 +10,6 @@ class UserModel implements \JsonSerializable
     private string $email;
     private string $firstName;
     private string $lastName;
-    private string $imageName;
     private RoleModel $role;
     private bool $isBanned;
 
@@ -37,14 +36,13 @@ class UserModel implements \JsonSerializable
             'email' => $this->email,
             'firstName' => $this->firstName,
             'lastName' => $this->lastName,
-            'imageUrl' => $this->imageName,
             'role' => $this->role,
             'isBanned' => $this->isBanned
         ];
     }
 
 
-    public function __construct(int $id, string $username, string $password, string $email, string $firstName, string $lastName, string $imageUrl, RoleModel $role, bool $isBanned)
+    public function __construct(int $id, string $username, string $password, string $email, string $firstName, string $lastName, RoleModel $role, bool $isBanned)
     {
         $this->id = $id;
         $this->username = $username;
@@ -52,7 +50,6 @@ class UserModel implements \JsonSerializable
         $this->email = $email;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->imageName = $imageUrl;
         $this->role = $role;
         $this->isBanned = $isBanned;
     }
@@ -70,12 +67,11 @@ class UserModel implements \JsonSerializable
             $email = $data["email"] ?? "";
             $firstName = $data["first_name"] ?? "";
             $lastName = $data["last_name"] ?? "";
-            $imageUrl = $data["image_name"] ?? "";
             $role = RoleModel::getRoleById($data["role_id_role"]);
             $isBanned = $data["is_banned"] == 1;
         }
 
-        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role, $isBanned);
+        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
     }
 
 
@@ -93,12 +89,11 @@ class UserModel implements \JsonSerializable
             $email = $data["email"] ?? "";
             $firstName = $data["first_name"] ?? "";
             $lastName = $data["last_name"] ?? "";
-            $imageUrl = $data["image_name"] ?? "";
             $role = RoleModel::getRoleById($data["role_id_role"]);
             $isBanned = $data["is_banned"] == 1;
         }
 
-        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role, $isBanned);
+        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
     }
 
     public static function completelyRemoveUser(int $id) {
@@ -146,10 +141,9 @@ class UserModel implements \JsonSerializable
             $email = $data[$i]["email"] ?? "";
             $firstName = $data[$i]["first_name"] ?? "";
             $lastName = $data[$i]["last_name"] ?? "";
-            $imageUrl = $data[$i]["image_name"] ?? "";
             $role = RoleModel::getRoleById($data[$i]["role_id_role"]);
             $isBanned = $data[$i]["is_banned"] == 1;
-            $users[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role, $isBanned);
+            $users[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
         }
 
         return $users;
@@ -168,12 +162,11 @@ class UserModel implements \JsonSerializable
             $email = $data["email"] ?? "";
             $firstName = $data["first_name"] ?? "";
             $lastName = $data["last_name"] ?? "";
-            $imageUrl = $data["image_name"] ?? "";
             $role = RoleModel::getRoleById($data["role_id_role"]);
             $isBanned = $data["is_banned"] == 1;
         }
 
-        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageUrl, $role, $isBanned);
+        return new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
     }
 
     public static function getPlayersFromMatchId(int $matchId): array {
@@ -192,11 +185,10 @@ class UserModel implements \JsonSerializable
                 $email = $userData["email"];
                 $firstName = $userData["first_name"] ?? "";
                 $lastName = $userData["last_name"] ?? "";
-                $imageName = $userData["image_name"] ?? "";
                 $role = RoleModel::getRoleById($userData["role_id_role"]);
                 $isBanned = $userData["is_banned"] == 1;
 
-                $players[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageName, $role, $isBanned);
+                $players[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
             }
         }
 
@@ -219,30 +211,29 @@ class UserModel implements \JsonSerializable
                 $email = $userData["email"];
                 $firstName = $userData["first_name"] ?? "";
                 $lastName = $userData["last_name"] ?? "";
-                $imageName = $userData["image_name"] ?? "";
                 $role = RoleModel::getRoleById($userData["role_id_role"]);
                 $isBanned = $userData["is_banned"] == 1;
 
-                $players[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $imageName, $role, $isBanned);
+                $players[$i] = new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
             }
         }
 
         return $players;
     }
 
-    public static function getAllUsernames() : array {
-        $db = DatabaseModel::getDatabaseModel();
-        $data = $db->getAllUsernamesFromDatabase();
-
-        return $data;
-    }
-
-    public static function getAllEmails() : array {
-        $db = DatabaseModel::getDatabaseModel();
-        $data = $db->getAllEmailsFromDatabase();
-
-        return $data;
-    }
+//    public static function getAllUsernames() : array {
+//        $db = DatabaseModel::getDatabaseModel();
+//        $data = $db->getAllUsernamesFromDatabase();
+//
+//        return $data;
+//    }
+//
+//    public static function getAllEmails() : array {
+//        $db = DatabaseModel::getDatabaseModel();
+//        $data = $db->getAllEmailsFromDatabase();
+//
+//        return $data;
+//    }
 
     public function getId(): int
     {
@@ -272,11 +263,6 @@ class UserModel implements \JsonSerializable
     public function getLastName(): string
     {
         return $this->lastName;
-    }
-
-    public function getImageName(): string
-    {
-        return $this->imageName;
     }
 
     public function getRole(): RoleModel

@@ -11,13 +11,7 @@ const BASE_APP_DIR_NAME = "app";
 const FILE_EXTENSIONS = array(".class.php", ".interface.php");
 
 //// automaticka registrace pozadovanych trid
-// ukazana slozitejsi varianta,
-// protoze namespaces zacinaji vlastnim nazvem (namisto nazvu vychoziho adresare)
-// a soubory nemaji jednotnou priponu (ale maji pripony .class.php nebo .interface.php)
 spl_autoload_register(function ($className){
-    // vsimnete si, ze jmeno tridy je zde bez uvodniho lomitka
-    //echo "Nacitam tridu: $className <br>";
-    // upravim v nazvu tridy vychozi adresar aplikace
     $className = str_replace(BASE_NAMESPACE_NAME, BASE_APP_DIR_NAME, $className);
     // slozim celou cestu k souboru bez pripony
     $fileName = dirname(__FILE__) ."\\". $className;
@@ -33,7 +27,6 @@ spl_autoload_register(function ($className){
     }
 
     // pripojim soubor s pozadovanou tridou
-    //echo "Ze souboru: $fileName <br>";
     require_once($fileName);
 });
 

@@ -7,9 +7,6 @@ class AuthPageView implements IView
 
     public function printOutput(array $tplData)
     {
-        // TODO: Implement printOutput() method.
-
-
         $headerView = new HeaderView();
 
         $headerView->printOutput($tplData);
@@ -32,7 +29,7 @@ class AuthPageView implements IView
             }
         }
 
-        if ($tplData["part"] == "login") {
+        if (isset($tplData["part"]) and $tplData["part"] == "login") {
 
         ?>
         <section id="login-part">
@@ -65,7 +62,6 @@ class AuthPageView implements IView
                 </form>
                 <hr>
                 <div class="d-inline-flex justify-content-between">
-                    <a class="link-primary" href="#">Zapomenuté heslo</a>
                     <a class="link-primary" href="?page=auth&part=registration">Vytvořit účet</a>
                 </div>
             </div>
@@ -74,7 +70,7 @@ class AuthPageView implements IView
         </section>
 
         <?php
-        } else if ($tplData["part"] == "registration") {
+        } else {
             ?>
             <section id="registration-part">
             <h1 class="display-1 text-center fw-bold mt-5">Registrace:</h1>

@@ -2,7 +2,6 @@
 
 namespace redstar\Controllers;
 
-use http\Client\Curl\User;
 use redstar\Models\RoleModel;
 use redstar\Models\UserModel;
 
