@@ -8,7 +8,7 @@
 /** Adresa serveru. */
 define("DB_SERVER","localhost");
 /** Nazev databaze. */
-define("DB_NAME","testing");
+define("DB_NAME","redstar");
 /** Uzivatel databaze. */
 define("DB_USER","root");
 /** Heslo uzivatele databaze */

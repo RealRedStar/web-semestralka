@@ -104,8 +104,6 @@ class UserModel implements \JsonSerializable
         $matches = MatchModel::getAllMatches();
 
         foreach ($matches as $match) {
-            MatchModel::removeMatch($match->getId());
-
             if (in_array($user, $match->getPlayers())) {
                 MatchModel::removePlayerFromMatch($user->getId(), $match->getId());
             }
