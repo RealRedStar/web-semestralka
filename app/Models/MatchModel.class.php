@@ -241,6 +241,13 @@ class MatchModel implements \JsonSerializable
             $db->unbanPlayerFromMatch($player->getId(), $match->getId());
         }
 
+        if ($match->getImageName() !== null and $match->getImageName() !== "") {
+            $targetDir = realpath(__DIR__ . "/../Resources/user-images/matches/") . "/" . $match->getImageName();
+            if (file_exists($targetDir)) {
+                unlink($targetDir);
+            }
+        }
+
         // smažeme kampaň z databáze
         $db->removeMatchFromDatabase($matchId);
     }

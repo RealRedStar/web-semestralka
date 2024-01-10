@@ -173,7 +173,7 @@ class UsersPageView implements IView
             </div>
 
             <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-            <script src="../../../web-semestralka/app/Resources/scripts/users-page.js" type="application/javascript"></script>
+            <script src="../../../MORAVCSIK-ONDREJ/app/Resources/scripts/users-page.js" type="application/javascript"></script>
 <?php
         }
 

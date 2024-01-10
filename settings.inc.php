@@ -12,7 +12,7 @@ define("DB_NAME","redstar");
 /** Uzivatel databaze. */
 define("DB_USER","root");
 /** Heslo uzivatele databaze */
-define("DB_PASS","root");
+define("DB_PASS","");
 
 /** Klic defaultni webove stranky. */
 const DEFAULT_WEB_PAGE_KEY = "home";

@@ -18,12 +18,6 @@ class MatchController implements IController
 
         $tplData = $header->show($pageTitle);
 
-//
-//        if (isset($_POST["load-match"])) {
-//            echo json_encode($this->retrieveMatch($_POST["load-match"]));
-//            exit();
-//        }
-
 
         // pokud není uživatel přihlášený, bude o tom informován
         if (!isset($tplData["user"])) {
@@ -231,10 +225,6 @@ class MatchController implements IController
             }
             MatchModel::setPlayerStatusFromMatch($_POST["player-id"], $match->getId(), $_POST["status"]);
         }
-//
-//        if (isset($_GET["edit"]) and $_GET["edit"] == "true") {
-//            $tplData["edit"] = true;
-//        }
 
         return $tplData;
     }

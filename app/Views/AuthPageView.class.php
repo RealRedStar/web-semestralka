@@ -166,7 +166,7 @@ class AuthPageView implements IView
 
         ?>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script src="../../../web-semestralka/app/Resources/scripts/auth-page.js"></script>
+        <script src="../../../MORAVCSIK-ONDREJ/app/Resources/scripts/auth-page.js"></script>
         <?php
         // vypíšeme patičku
         $headerView->getHTMLFooter();

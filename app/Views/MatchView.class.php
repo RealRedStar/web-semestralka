@@ -64,7 +64,7 @@ class MatchView implements IView
             </div>
 
             <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-            <script src="../../../web-semestralka/app/Resources/scripts/match-page.js" type="application/javascript"></script> <?php
+            <script src="../../../MORAVCSIK-ONDREJ/app/Resources/scripts/match-page.js" type="application/javascript"></script> <?php
 
             // pokud je nastavena kampaň, vypíšeme ji
         } else if (isset($tplData["match"]) and $tplData["match"] != "new") {
@@ -82,9 +82,9 @@ class MatchView implements IView
             $isFull = sizeof($match->getPlayers()) == $match->getMaxPlayers();
 
             if ($match->getImageName() == "") {
-                $imageUrl = "/web-semestralka/app/Resources/logos/unknown.png";
+                $imageUrl = "/MORAVCSIK-ONDREJ/app/Resources/logos/unknown.png";
             } else {
-                $imageUrl = "/web-semestralka/app/Resources/user-images/matches/" . $match->getImageName();
+                $imageUrl = "/MORAVCSIK-ONDREJ/app/Resources/user-images/matches/" . $match->getImageName();
             }
 
             ?>
@@ -397,7 +397,7 @@ class MatchView implements IView
             </div>
 
             <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-            <script src="../../../web-semestralka/app/Resources/scripts/match-page.js" type="application/javascript"></script>
+            <script src="../../../MORAVCSIK-ONDREJ/app/Resources/scripts/match-page.js" type="application/javascript"></script>
 <?php
         }
 

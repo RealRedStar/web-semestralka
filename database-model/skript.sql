@@ -183,7 +183,7 @@ COMMIT;
 START TRANSACTION;
 USE `redstar`;
 INSERT INTO `redstar`.`matches` (`id_match`, `owner_id_user`, `name`, `max_players`, `description`, `date_created`, `date_starting`, `date_finished`, `join_code`, `join_password`, `image_name`) VALUES (1, 4, 'Redstarova pouť', 5, 'Pro testovací účely.', '2024-01-09 21:09:51', '2024-01-10 15:00:00', NULL, NULL, NULL, 'redstar_match_1.png');
-INSERT INTO `redstar`.`matches` (`id_match`, `owner_id_user`, `name`, `max_players`, `description`, `date_created`, `date_starting`, `date_finished`, `join_code`, `join_password`, `image_name`) VALUES (2, 5, '<script></script>', 32, '<b>Test</b><br>', '2024-01-09 21:11:50', '2024-01-31 22:11:00', NULL, NULL, NULL, NULL);
+INSERT INTO `redstar`.`matches` (`id_match`, `owner_id_user`, `name`, `max_players`, `description`, `date_created`, `date_starting`, `date_finished`, `join_code`, `join_password`, `image_name`) VALUES (2, 5, '<script>console.log(test)</script>', 32, '<b>Test</b><br>', '2024-01-09 21:11:50', '2024-01-31 22:11:00', NULL, NULL, NULL, NULL);
 
 COMMIT;
 

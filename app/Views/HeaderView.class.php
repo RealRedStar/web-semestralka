@@ -36,14 +36,14 @@ class HeaderView implements IView
             <title><?php echo htmlspecialchars($pageTitle) ?></title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-            <link href="../../../web-semestralka/app/Resources/styles.css" rel="stylesheet">
+            <link href="../../../MORAVCSIK-ONDREJ/app/Resources/styles.css" rel="stylesheet">
         </head>
         <body class="d-flex flex-column min-vh-100 bg-black" data-bs-theme="dark">
         <header>
         <nav class="navbar navbar-expand-lg bg-dark border-bottom" data-bs-theme="dark">
         <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="../../../web-semestralka/app/Resources/logos/navbar-logo.png" alt="Logo hlavní stránky" height="64" width="64">
+        <a class="navbar-brand" href="?page=home">
+            <img src="../../../MORAVCSIK-ONDREJ/app/Resources/logos/navbar-logo.png" alt="Logo hlavní stránky" height="64" width="64">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
