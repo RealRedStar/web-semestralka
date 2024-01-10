@@ -4,13 +4,15 @@ namespace redstar\Views;
 
 use redstar\Models\UserModel;
 
+/**
+ * Třída reprezentuje šablonu hlavičky (obsahuje i metodu pro vytisknutí patičky)
+ */
 class HeaderView implements IView
 {
 
     /**
      * Přetypovaná metoda interface IView, která volá metodu getHTMLHeader pro vypsání šablony
      * @param array $tplData - Data pro šablonu
-     * @return void
      */
     public function printOutput(array $tplData)
     {
@@ -52,7 +54,7 @@ class HeaderView implements IView
                 <a class="nav-link <?php echo $pageTitle == 'Úvodní stránka' ? 'active' : '';?>" href="?">Domů</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?php echo $pageTitle == 'Seznam turnajů' ? 'active' : '';?>" href="?page=matches">Seznam turnajů</a>
+                <a class="nav-link <?php echo $pageTitle == 'Seznam kampaní' ? 'active' : '';?>" href="?page=matches">Seznam kampaní</a>
             </li>
             <?php
                 if (isset($user) and $tplData["user"]->getRole()->getPermissions() > 1) {

@@ -2,9 +2,16 @@
 
 namespace redstar\Views;
 
+/**
+ * Třída reprezentuje šablonu pro stránku s turnaji
+ */
 class MatchesView implements IView
 {
 
+    /**
+     * Vytiskne danou stránku uživateli
+     * @param array $tplData data pro šablonu
+     */
     public function printOutput(array $tplData)
     {
 
@@ -36,7 +43,7 @@ class MatchesView implements IView
         </div>
         <?php
             if ($logon) {
-                $loadAll = $tplData["user"]->getRole()->getPermissions() > 1;
+                $loadAll = true;
                 echo "<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>";
                 echo "<script src='../../../web-semestralka/app/Resources/scripts/matches-page.js' type='application/javascript' onload='loadMatches($loadAll)'></script>";
             }

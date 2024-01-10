@@ -2,15 +2,16 @@
 
 namespace redstar\Views;
 
-use redstar\Controllers\HeaderController;
-
 /**
  * Šablona pro zobrazení úvodní stránky
  * @package redstar\Views
  */
 class IntroductionView implements IView
 {
-
+    /**
+     * Vytiskne danou stránku uživateli
+     * @param array $tplData data pro šablonu
+     */
     public function printOutput(array $tplData)
     {
         $HeaderView = new HeaderView();
@@ -86,7 +87,7 @@ class IntroductionView implements IView
 </div>
 
 <?php
-
+        // získání patičky
         $HeaderView->getHTMLFooter();
     }
 }

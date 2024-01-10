@@ -114,36 +114,6 @@ class DatabaseModel
         }
     }
 
-//    public function getAllUsernamesFromDatabase(): array
-//    {
-//        $stmt = $this->pdo->prepare("SELECT username FROM users");
-//
-//        $stmt->execute();
-//
-//        $data = array();
-//
-//        for ($i = 0; $row = $stmt->fetch(PDO::FETCH_NUM); $i++) {
-//            $data[$i] = $row[0];
-//        }
-//
-//        return $data;
-//    }
-//
-//    public function getAllEmailsFromDatabase(): array
-//    {
-//        $stmt = $this->pdo->prepare("SELECT email FROM users");
-//
-//        $stmt->execute();
-//
-//        $data = array();
-//
-//        for ($i = 0; $row = $stmt->fetch(PDO::FETCH_NUM); $i++) {
-//            $data[$i] = $row[0];
-//        }
-//
-//        return $data;
-//    }
-
     /**
      * Získá všechny atributy o kampani dle ID
      * @param int $id - ID kampaně
@@ -171,13 +141,6 @@ class DatabaseModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-//    public function getMatchesCount() {
-//        $stmt = $this->pdo->prepare("SELECT COUNT(id_match) FROM matches");
-//        $stmt->execute();
-//
-//        return $stmt->fetch()[0];
-//    }
 
     /**
      * Získá aktuální ID hráčů kampaně dle ID kampaně
@@ -522,6 +485,13 @@ class DatabaseModel
         }
     }
 
+    /**
+     * Nastaví dané kampani kód pro připojení a heslo pro připojení
+     * @param int $matchId ID kampaně
+     * @param string $joinCode připojovací kód
+     * @param string $joinPassword připojovací heslo
+     * @return bool true pokud vše proběhlo úspěšně, jinak false
+     */
     public function changeMatchJoiningCredentials(int $matchId, string $joinCode, string $joinPassword): bool
     {
         try {
@@ -535,6 +505,12 @@ class DatabaseModel
         }
     }
 
+    /**
+     * Nastaví datum ukončení kampaně a tím ji automaticky vypne
+     * @param int $matchId ID kampaně
+     * @param string $dateTime datum ukončení
+     * @return bool true pokud vše proběhlo úspěšně, jinak false
+     */
     public function setMatchFinishDate(int $matchId, string $dateTime): bool
     {
         try {
@@ -547,6 +523,17 @@ class DatabaseModel
         }
     }
 
+    /**
+     * Vytvoří novou kampaň
+     * @param string $name jméno kampaně
+     * @param string $description popis kampaně
+     * @param int $ownerId ID majitele
+     * @param int $maxPlayers maximální počet hráčů
+     * @param string $dateCreated datum vytvoření
+     * @param string $dateStarting očekávaný datum odstartování
+     * @param string $imageName název loga
+     * @return bool true pokud vše proběhlo úspěšně, jinak false
+     */
     public function createNewMatch(string $name, string $description, int $ownerId, int $maxPlayers, string $dateCreated, string $dateStarting, string $imageName): bool
     {
         try {

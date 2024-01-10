@@ -5,15 +5,17 @@ namespace redstar\Controllers;
 use redstar\Models\DatabaseModel;
 use redstar\Models\UserModel;
 
+/**
+ * Tato třída reprezentuje controller, který se stará o získání dat pro šablonu s hlavičkou
+ */
 class HeaderController implements IController
 {
-    private DatabaseModel $db;
 
-    public function __construct()
-    {
-        $db = DatabaseModel::getDatabaseModel();
-    }
-
+    /**
+     * Zajistí vypsání dané stránky
+     * @param string $pageTitle titulek stránky
+     * @return array pole dat pro šablonu
+     */
     public function show(string $pageTitle): array
     {
         session_start();
@@ -21,12 +23,13 @@ class HeaderController implements IController
 
         $tplData["title"] = $pageTitle;
 
-
+        // pokud se uživatel odhlásil, ukončíme relaci
         if (isset($_POST["logout-btn"]) and $_POST["logout-btn"] == "logout") {
             $tplData["login-status"] = "Logout";
             session_unset();
         }
 
+        // pokud se uživatel snaží přihlásit, zkontrolujeme zadané údaje
         if (isset($_POST["login-btn"]) and $_POST["login-btn"] == "login") {
             if (!isset($_POST["username"]) or !isset($_POST["password"])) {
                 $tplData["login-status"] = "Fail";
@@ -43,7 +46,9 @@ class HeaderController implements IController
             }
         }
 
+        // pokud je nastaven v relaci uživatel, přihlásíme ho
         if (isset($_SESSION["user"])) {
+            // naopak pokud je uživatel bannutý, ukončíme relaci
             if ($_SESSION["user"]->isBanned()) {
                 $tplData["user"] = null;
                 $tplData["login-status"] = "Banned";

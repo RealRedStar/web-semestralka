@@ -7,7 +7,11 @@ namespace redstar\Controllers;
  */
 class IntroductionController implements IController
 {
-
+    /**
+     * Zajistí vypsání dané stránky
+     * @param string $pageTitle titulek stránky
+     * @return array pole dat pro šablonu
+     */
     public function show(string $pageTitle): array
     {
 

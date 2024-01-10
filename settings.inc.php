@@ -25,7 +25,7 @@ const WEB_PAGES = array(
         "title" => "Úvodní stránka",
 
         //// controller
-        "controller_class_name" => \redstar\Controllers\IntroductionController::class, // poskytne nazev tridy vcetne namespace
+        "controller_class_name" => \redstar\Controllers\IntroductionController::class,
 
         //// ClassBased šablona
         "view_class_name" => \redstar\Views\IntroductionView::class,
@@ -43,6 +43,7 @@ const WEB_PAGES = array(
         "view_class_name" => \redstar\Views\MatchesView::class
     ),
     //// KONEC: Seznam kampaní ////
+    //// Vybraná kampaň ////
     "match" => array(
         ///
         "title" => "Kampaň",
@@ -50,6 +51,8 @@ const WEB_PAGES = array(
         "controller_class_name" => \redstar\Controllers\MatchController::class,
         "view_class_name" => \redstar\Views\MatchView::class
     ),
+    //// KONEC: Vybraná kampaň ////
+    //// Autentikace ////
     "auth" => array(
         "title" => "Autentikace",
 
@@ -57,6 +60,8 @@ const WEB_PAGES = array(
 
         "view_class_name" => \redstar\Views\AuthPageView::class
     ),
+    //// KONEC: Autentikace ////
+    //// Správa uživatelů ////
     "users" => array(
         "title" => "Správa uživatelů",
 
@@ -64,6 +69,7 @@ const WEB_PAGES = array(
 
         "view_class_name" => \redstar\Views\UsersPageView::class
     )
+    //// KONEC: Správa uživatelů ////
 );
 
 ?>

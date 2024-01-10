@@ -2,15 +2,24 @@
 
 namespace redstar\Views;
 
+/**
+ * Třída reprezentuje šablonu pro stránku s autentizací
+ */
 class AuthPageView implements IView
 {
 
+    /**
+     * Vytiskne danou stránku uživateli
+     * @param array $tplData data pro šablonu
+     */
     public function printOutput(array $tplData)
     {
         $headerView = new HeaderView();
 
+        // vytiskneme hlavičku stránky
         $headerView->printOutput($tplData);
 
+        // vypíšeme hlášku o stavu registrace, pokud proběhla
         if (isset($tplData["register-status"])) {
             if ($tplData["register-status"] == "Success") {
                 ?>
@@ -29,6 +38,7 @@ class AuthPageView implements IView
             }
         }
 
+        // vypíšeme jednotlivou část stránky
         if (isset($tplData["part"]) and $tplData["part"] == "login") {
 
         ?>
@@ -158,6 +168,7 @@ class AuthPageView implements IView
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="../../../web-semestralka/app/Resources/scripts/auth-page.js"></script>
         <?php
+        // vypíšeme patičku
         $headerView->getHTMLFooter();
 
     }

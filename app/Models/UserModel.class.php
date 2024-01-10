@@ -4,44 +4,34 @@ namespace redstar\Models;
 
 class UserModel implements \JsonSerializable
 {
+    /** @var int ID uživatele */
     private int $id;
+    /** @var string uživatelské jméno */
     private string $username;
+    /** @var string heslo */
     private string $password;
+    /** @var string email */
     private string $email;
+    /** @var string křestní jméno */
     private string $firstName;
+    /** @var string příjmení */
     private string $lastName;
+    /** @var RoleModel role uživatele */
     private RoleModel $role;
+    /** @var bool zda je bannutý */
     private bool $isBanned;
 
-    public static function banUserById(int $id)
-    {
-        $db = DatabaseModel::getDatabaseModel();
 
-        $db->banUserById($id);
-    }
-
-    public static function unbanUserById(int $id)
-    {
-        $db = DatabaseModel::getDatabaseModel();
-
-        $db->unbanUserById($id);
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'password' => $this->password,
-            'email' => $this->email,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
-            'role' => $this->role,
-            'isBanned' => $this->isBanned
-        ];
-    }
-
-
+    /**
+     * @param int $id id uživatele
+     * @param string $username uživatelské jméno
+     * @param string $password heslo
+     * @param string $email email
+     * @param string $firstName křestní jméno
+     * @param string $lastName příjmení
+     * @param RoleModel $role role
+     * @param bool $isBanned zda je bannutý
+     */
     public function __construct(int $id, string $username, string $password, string $email, string $firstName, string $lastName, RoleModel $role, bool $isBanned)
     {
         $this->id = $id;
@@ -54,6 +44,11 @@ class UserModel implements \JsonSerializable
         $this->isBanned = $isBanned;
     }
 
+    /**
+     * Vrátí uživatele dle hledaného ID
+     * @param int $id ID uživatele
+     * @return UserModel|null uživatele, pokud existuje uživatel pod daným ID, jinak null
+     */
     public static function getUserById(int $id): ?UserModel {
         $db = DatabaseModel::getDatabaseModel();
         $data = $db->getUserDataById($id);
@@ -74,7 +69,11 @@ class UserModel implements \JsonSerializable
         return new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
     }
 
-
+    /**
+     * Vrátí uživatele dle uživatelského jména
+     * @param string $username uživatelské jméno
+     * @return UserModel|null uživatele, pokud existuje uživatel, jinak null
+     */
     public static function getUserByUsername(string $username): ?UserModel
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -96,35 +95,45 @@ class UserModel implements \JsonSerializable
         return new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
     }
 
+    /**
+     * Kompletně smaže všechny informace o uživateli včetně odehraných a vlastněných zápasů
+     * @param int $id ID uživatele
+     */
     public static function completelyRemoveUser(int $id) {
         $user = self::getUserById($id);
 
         $db = DatabaseModel::getDatabaseModel();
 
+        // získáme všechny kampaně
         $matches = MatchModel::getAllMatches();
 
+        // procházíme všechny kampaně a zjišťujeme, zda do ní uživatel nezapadá
         foreach ($matches as $match) {
+
+            // odebereme ho z tabulky hráčů
             if (in_array($user, $match->getPlayers())) {
                 MatchModel::removePlayerFromMatch($user->getId(), $match->getId());
             }
 
+            // odebereme ho z tabulky bannutých hráčů
             if (in_array($user, $match->getBannedPlayers())) {
                 MatchModel::unbanPlayerFromMatch($user->getId(), $match->getId());
             }
 
+            // odebereme jeho zápas
             if ($match->getOwner() == $user) {
                 MatchModel::removeMatch($match->getId());
             }
         }
 
+        // odebereme uživatele z databáze
         $db->removeUserFromDatabase($user->getId());
     }
 
-    public function isBanned(): bool
-    {
-        return $this->isBanned;
-    }
-
+    /**
+     * Získá údaje všech uživatelů a vrátí je
+     * @return array pole uživatelů
+     */
     public static function getAllUsers(): array
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -147,6 +156,11 @@ class UserModel implements \JsonSerializable
         return $users;
     }
 
+    /**
+     * Získá uživatele podle emailu
+     * @param string $email email
+     * @return UserModel|null uživatele, pokud existuje, jinak null
+     */
     public static function getUserByEmail(string $email): ?UserModel {
         $db = DatabaseModel::getDatabaseModel();
         $data = $db->getUserDataByEmail($email);
@@ -167,6 +181,11 @@ class UserModel implements \JsonSerializable
         return new UserModel($id, $username, $password, $email, $firstName, $lastName, $role, $isBanned);
     }
 
+    /**
+     * Získá hráče z kampaně
+     * @param int $matchId ID kampaně
+     * @return array pole hráčů
+     */
     public static function getPlayersFromMatchId(int $matchId): array {
         $db = DatabaseModel::getDatabaseModel();
 
@@ -192,6 +211,12 @@ class UserModel implements \JsonSerializable
 
         return $players;
     }
+
+    /**
+     * Získá a vrátí pole bannutých hráčů jednoho zápasu
+     * @param int $id ID zapasu
+     * @return array pole bannutých hráčů
+     */
     public static function getBannedPlayersFromMatchId(int $id): array
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -219,53 +244,108 @@ class UserModel implements \JsonSerializable
         return $players;
     }
 
-//    public static function getAllUsernames() : array {
-//        $db = DatabaseModel::getDatabaseModel();
-//        $data = $db->getAllUsernamesFromDatabase();
-//
-//        return $data;
-//    }
-//
-//    public static function getAllEmails() : array {
-//        $db = DatabaseModel::getDatabaseModel();
-//        $data = $db->getAllEmailsFromDatabase();
-//
-//        return $data;
-//    }
+    /**
+     * Zabanuje uživatele
+     * @param int $id ID uživatele
+     */
+    public static function banUserById(int $id)
+    {
+        $db = DatabaseModel::getDatabaseModel();
 
+        $db->banUserById($id);
+    }
+
+    /**
+     * Odbanuje uživatele
+     * @param int $id ID uživatele
+     */
+    public static function unbanUserById(int $id)
+    {
+        $db = DatabaseModel::getDatabaseModel();
+
+        $db->unbanUserById($id);
+    }
+
+    /**
+     * Převede model na řetězec json ve formě asociativního pole
+     * @return array - json asociativní pole uživatele
+     */
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'password' => $this->password,
+            'email' => $this->email,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'role' => $this->role,
+            'isBanned' => $this->isBanned
+        ];
+    }
+
+    /**
+     * @return int ID uživatele
+     */
     public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+     * @return string uživatelské jméno
+     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
+    /**
+     * @return string heslo
+     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
+    /**
+     * @return string email
+     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
+    /**
+     * @return string křestní jméno
+     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
+    /**
+     * @return string příjmení
+     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
+    /**
+     * @return RoleModel roli
+     */
     public function getRole(): RoleModel
     {
         return $this->role;
+    }
+
+    /**
+     * @return bool zda je bannutý
+     */
+    public function isBanned(): bool
+    {
+        return $this->isBanned;
     }
 
 }

@@ -1,19 +1,6 @@
-body {
-    --bs-body-bg: #000000;
-}
-
 @media screen and (min-width: 992px) {
     .dropdown-menu {
         min-width: 300px;
         margin-left: -100px;
     }
-}
-
-.btn-violet {
-    /*background-color: #7134ff !important;*/
-    --bs-btn-color: #FFFFFF;
-    --bs-btn-bg: #7134ff;
-    --bs-btn-hover-bg: #5d2ed0;
-    --bs-btn-active-bg: #4f20c4;
-    --bs-btn-disabled-bg: #8e6bf8;
 }

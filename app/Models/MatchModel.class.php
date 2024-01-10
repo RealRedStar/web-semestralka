@@ -76,6 +76,7 @@ class MatchModel implements \JsonSerializable
         $db = DatabaseModel::getDatabaseModel();
         $purifier = \HTMLPurifier::getInstance();
 
+        // Přes HTMLPurifier odstraníme nebezpečné znaky názvu a popisku
         $nothingAllowedConfig = \HTMLPurifier_Config::createDefault();
         $CKETagsAllowed = \HTMLPurifier_Config::createDefault();
         $nothingAllowedConfig->set('HTML.Allowed', '');
@@ -309,6 +310,12 @@ class MatchModel implements \JsonSerializable
         $db->setPlayerStatusFromMatch($playerId, $matchId, $status);
     }
 
+    /**
+     * Nastaví kampani připojovací údaje
+     * @param int $matchId ID kampaně
+     * @param string $joinCode kód pro připojení
+     * @param string $joinPassword heslo pro připojení
+     */
     public static function changeJoiningCredentials(int $matchId, string $joinCode, string $joinPassword)
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -316,6 +323,11 @@ class MatchModel implements \JsonSerializable
         $db->changeMatchJoiningCredentials($matchId, $joinCode, $joinPassword);
     }
 
+    /**
+     * Nastaví kampani datum ukončení a tím ji ukončí
+     * @param int $matchId ID kampaně
+     * @param string $dateTime datum ukončení
+     */
     public static function setMatchFinishDate(int $matchId, string $dateTime)
     {
         $db = DatabaseModel::getDatabaseModel();
@@ -323,6 +335,17 @@ class MatchModel implements \JsonSerializable
         $db->setMatchFinishDate($matchId, $dateTime);
     }
 
+    /**
+     * Vytvoří novou kampaň
+     * @param string $name jméno kampaně
+     * @param string $description popis kampaně
+     * @param int $ownerId ID majitele
+     * @param int $maxPlayers maximální počet hráčů
+     * @param string $dateCreated datum vytvoření
+     * @param string $dateStarting očekávaný datum odstartování
+     * @param string $imageName název loga
+     * @return bool true pokud vše proběhlo úspěšně, jinak false
+     */
     public static function saveNewMatch(string $name, string $description, int $ownerId, int $maxPlayers, string $dateCreated, string $dateStarting, string $imageName): bool
     {
         $db = DatabaseModel::getDatabaseModel();

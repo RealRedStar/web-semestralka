@@ -2,6 +2,9 @@
 
 namespace redstar\Views;
 
+/**
+ * Tato třída reprezentuje šablonu pro správu uživatelů
+ */
 class UsersPageView implements IView
 {
 
@@ -11,6 +14,7 @@ class UsersPageView implements IView
 
         $header->printOutput($tplData);
 
+        // vypsání chyb, pokud existují, jinak vypíšeme stránku
         if (isset($tplData["error"])) {
             $error = $tplData["error"];
             echo "<div class='alert alert-danger mx-5 mt-3'><b>Chyba: </b>$error</div>";
@@ -24,6 +28,7 @@ class UsersPageView implements IView
                                 <th class='col-1 bg-primary' scope='col'>ID uživatele</th>
                                 <th class='col-1 bg-primary' scope='col'>Stav uživatele</th>
                                 <th class='bg-primary' scope='col'>Uživatelské jméno</th>
+                                <th class='bg-primary' scope='col'>Email</th>
                                 <th class='bg-primary' scope='col'>Celé jméno</th>
                                 <th class='bg-primary' scope='col'>Role</th>
                                 <th class='col-1 bg-primary' scope='col'>Akce</th>
@@ -33,6 +38,7 @@ class UsersPageView implements IView
             for ($i = 0; $i < sizeof($tplData["users"]); $i++) {
                 $user = $tplData["users"][$i];
                 $userId = $user->getId();
+                $userEmail = htmlspecialchars($user->getEmail());
                 $userIsBanned = $user->isBanned();
                 $username = htmlspecialchars($user->getUsername());
                 $userFullName = htmlspecialchars($user->getFirstname()) . " " . htmlspecialchars($user->getLastName());
@@ -62,6 +68,7 @@ class UsersPageView implements IView
                 }
 
                 echo "<td>$username</td>";
+                echo "<td>$userEmail</td>";
                 echo "<td>$userFullName</td>";
                 if ($loggedUserPermissions > $userPermissions and $loggedUserPermissions > 5) {
                     ?>
