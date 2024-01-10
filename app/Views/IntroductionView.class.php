@@ -22,8 +22,8 @@ class IntroductionView implements IView
 <div class="mt-5 text-center justify-content-center d-flex text-white" data-bs-theme="dark">
     <div class="justify-content-center align-items-center text-center col-lg-6 mx-2">
         <h1 class="display-1 fw-bold mb-5">Vzhůru do boje!</h1>
-        <h3 class="display-6 mb-5">Hearts of Competition je webová aplikace pro organizování turnajů do hry Hearts of Iron IV.</h3>
-        <h3 class="display-6">Zaregistrujte se pro přístup do místnosti s turnaji, přihlašte se a ukažte svoje strategické schopnosti, nebo vytvořte vlastní turnaj a doveďte vaše spojence k vítězství!</h3>
+        <h3 class="display-6 mb-5">Hearts of Competition je webová aplikace pro organizování kampaní do hry Hearts of Iron IV.</h3>
+        <h3 class="display-6">Zaregistrujte se pro přístup do místnosti s kampaněmi, přihlašte se a ukažte svoje strategické schopnosti, nebo vytvořte vlastní kampaň a doveďte vaše spojence k vítězství!</h3>
     </div>
 </div>
 <div class="d-flex mt-3 justify-content-center gap-3">
@@ -48,7 +48,7 @@ class IntroductionView implements IView
             <h4 class="card-title">Jednoduchý zápis</h4>
             <p class="card-text">
                 Žádné dlouhé čekání na to, než se připojí více hráčů.
-                Vyberte si z turnajů, které vás svým popisem a časem zaujmou, vyberte si preferovaný národ a vzhůru do boje!
+                Vyberte si z kampaní, které vás svým popisem a časem zaujmou, vyberte si preferovaný národ a vzhůru do boje!
             </p>
         </div>
     </div>

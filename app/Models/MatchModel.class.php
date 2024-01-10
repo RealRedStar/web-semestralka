@@ -80,7 +80,7 @@ class MatchModel implements \JsonSerializable
         $nothingAllowedConfig = \HTMLPurifier_Config::createDefault();
         $CKETagsAllowed = \HTMLPurifier_Config::createDefault();
         $nothingAllowedConfig->set('HTML.Allowed', '');
-        // TODO: doplnit tagy
+
         $CKETagsAllowed->set('HTML.Allowed', '');
 
         $data = $db->getMatchByIdFromDatabase($id);
@@ -122,7 +122,6 @@ class MatchModel implements \JsonSerializable
         $nothingAllowedConfig->set('HTML.Allowed', '');
 
         $CKETagsAllowed = $purifier->config;
-        // TODO: doplnit tagy
         $CKETagsAllowed->set('HTML.Allowed', '');
 
         $data = $db->getAllMatchesFromDatabase();
